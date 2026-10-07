@@ -6,12 +6,12 @@
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Sổ động từ Dekiru</title>
+<title>Sổ từ vựng Dekiru</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&family=DM+Mono:wght@400;500&family=Klee+One:wght@400;600&display=swap">
 <style>
-/* Layout: vở ô li paper ground → hero (動詞 + progress grid, one cell per word) → scope bar → notebook-index tabs → study stage → method guide */
+/* Layout: vở ô li paper ground → deck chooser (動詞 / 形容詞 cards) → per-deck app: hero (kanji + progress grid) → scope bar → notebook-index tabs → study stage → method guide */
 :root{
   --paper:#ECEEF4; --sheet:#FAFBFD; --sheet-2:#F1F3F9; --card:#FFFFFF;
   --ink:#1A2140; --ink-2:#555D7D; --rule:#D2D7E5; --grid:rgba(118,104,196,.11);
@@ -65,9 +65,34 @@ kbd{font:500 11px var(--f-mono); border:1px solid currentColor; border-bottom-wi
 .wrap{max-width:1140px; margin-inline:auto; padding-inline:clamp(16px, 3vw, 28px); padding-block:0 40px}
 
 /* top bar */
-.topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding-block:18px}
-.brand{display:inline-flex; align-items:center; gap:10px; color:var(--ink); text-decoration:none; font-weight:600}
+.topbar{display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px 16px; padding-block:18px}
+.brand{display:inline-flex; align-items:center; gap:10px; color:var(--ink); font:600 16px var(--f-ui); background:none; border:0; padding:0; cursor:pointer}
+.brand:hover .brand-name{text-decoration:underline; text-underline-offset:3px}
 .seal{display:inline-grid; place-items:center; width:34px; height:34px; border-radius:8px; background:var(--shu); color:var(--on-shu); font-size:20px; font-weight:600; transform:rotate(-4deg)}
+
+/* deck chooser */
+.chooser{display:grid; gap:28px; padding-block:clamp(16px, 5vw, 56px) 24px}
+.ch-head{display:grid; gap:10px; max-width:60ch}
+.ch-head h1{font-size:clamp(30px, 4.6vw, 48px); font-weight:800; letter-spacing:-.015em}
+.choices{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:clamp(14px, 2.4vw, 24px)}
+.choice{--acc:var(--shu); display:grid; justify-items:start; align-content:start; gap:6px; min-width:0; text-align:left; padding:clamp(20px, 3vw, 32px);
+  background-color:var(--card); background-image:linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px); background-size:22px 22px;
+  border:1px solid var(--rule); border-top:5px solid var(--acc); border-radius:22px; box-shadow:var(--shadow); color:var(--ink); font:inherit; cursor:pointer; transition:border-color .2s, box-shadow .2s}
+.choice.ch-adj{--acc:var(--indigo)}
+.choice:hover{border-color:var(--acc); border-top-color:var(--acc); box-shadow:0 1px 0 rgba(26,33,64,.05), 0 22px 40px -24px rgba(26,33,64,.55)}
+.ch-ruby{font-size:15px; letter-spacing:.7em; color:var(--ink-2); padding-left:.2em}
+.ch-kanji{font-size:clamp(60px, 9vw, 100px); font-weight:600; line-height:1.02}
+.ch-name{font-size:24px; font-weight:800; margin-top:6px}
+.ch-sample{font-size:17px; color:var(--ink-2); overflow-wrap:anywhere}
+.ch-meta{font-size:14px; color:var(--ink-2)}
+.ch-prog{display:flex; align-items:center; gap:10px; width:100%; margin-top:8px}
+.ch-bar{flex:1; height:6px; border-radius:6px; background:var(--sheet-2); overflow:hidden}
+.ch-bar i{display:block; height:100%; background:var(--acc); transform-origin:left center}
+.ch-prog .mono{font-size:13px; color:var(--ink-2); white-space:nowrap}
+.ch-go{display:inline-flex; align-items:center; gap:6px; margin-top:10px; font-weight:600; color:var(--acc)}
+.ch-arrow{display:inline-block; transition:transform .2s}
+.choice:hover .ch-arrow{transform:translateX(4px)}
+.ch-note{font-size:14px; color:var(--ink-2)}
 
 /* hero */
 .hero{display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:clamp(22px,4vw,52px); align-items:start; padding-block:18px 40px}
@@ -147,6 +172,8 @@ kbd{font:500 11px var(--f-mono); border:1px solid currentColor; border-bottom-wi
 .seg{display:inline-flex; flex-wrap:wrap; gap:2px; padding:3px; border:1px solid var(--rule); border-radius:999px; background:var(--sheet-2)}
 .seg button{border:0; background:transparent; color:var(--ink-2); font:500 13px var(--f-ui); padding:6px 12px; border-radius:999px; cursor:pointer; min-height:32px}
 .seg button[aria-pressed="true"]{background:var(--card); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.deck-seg button{font-size:14px; padding:6px 14px; min-height:34px}
+.deck-seg .jp{font-size:12px; margin-right:6px; color:var(--shu)}
 .bar{height:4px; border-radius:4px; background:var(--sheet-2); overflow:hidden}
 .bar i{display:block; height:100%; background:var(--indigo); transform-origin:left center}
 .tag{display:inline-block; font:500 12px var(--f-mono); letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); border:1px solid var(--rule); border-radius:6px; padding:2px 8px; background:var(--sheet)}
@@ -168,7 +195,7 @@ kbd{font:500 11px var(--f-mono); border:1px solid currentColor; border-bottom-wi
 .fc-hint{font-size:13px; color:var(--ink-2); position:absolute; bottom:16px; left:16px; right:16px}
 .fc-back-top{display:flex; gap:8px; align-items:center; justify-content:center}
 .fc-back-top .tag{position:static}
-.fc-mid{font-size:44px; font-weight:600; line-height:1.15}
+.fc-mid{font-size:44px; font-weight:600; line-height:1.15; overflow-wrap:anywhere}
 .fc-read{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:center}
 .fc-read .jp{font-size:20px}
 .fc-read .mono{color:var(--ink-2)}
@@ -176,6 +203,7 @@ kbd{font:500 11px var(--f-mono); border:1px solid currentColor; border-bottom-wi
 .fc-ex{display:flex; align-items:center; gap:10px; padding:8px 12px; border-radius:10px; background:var(--sheet-2); font-size:17px; text-align:left}
 .ex-text{display:grid; gap:1px; min-width:0}
 .ex-kana{font-size:.8em; color:var(--ink-2); letter-spacing:.03em}
+.ex-vn{font-size:.8em; color:var(--ink-2); font-family:var(--f-ui)}
 .fc-kana{font-size:clamp(20px, 4.5vw, 26px); color:var(--ink-2); letter-spacing:.12em; margin-top:-6px}
 .swipe-tag{position:absolute; top:28px; z-index:3; font:800 15px var(--f-ui); letter-spacing:.06em; text-transform:uppercase; padding:6px 12px; border:3px solid currentColor; border-radius:8px; pointer-events:none; background:var(--card)}
 .swipe-tag.no{left:max(0px, calc(50% - 250px)); color:var(--bad); transform:rotate(-10deg)}
@@ -183,14 +211,14 @@ kbd{font:500 11px var(--f-mono); border:1px solid currentColor; border-bottom-wi
 .actions{display:flex; flex-wrap:wrap; justify-content:center; gap:10px}
 .tally{text-align:center; font-size:14px; color:var(--ink-2)}
 
-/* quiz / typing / group shared */
+/* quiz / typing shared */
 .dots{display:flex; flex-wrap:wrap; gap:5px; list-style:none; margin:0; padding:0}
 .dots li{width:11px; height:11px; border-radius:50%; border:1.5px solid var(--rule)}
 .dots li.cur{border-color:var(--indigo); background:color-mix(in srgb, var(--indigo) 25%, transparent)}
 .dots li.ok{background:var(--ok); border-color:var(--ok)}
 .dots li.bad{background:var(--bad); border-color:var(--bad)}
 .q-prompt{display:grid; justify-items:center; gap:8px; text-align:center; padding-block:14px 6px}
-.q-big{font-size:clamp(50px, 10vw, 76px); font-weight:600; line-height:1.1}
+.q-big{font-size:clamp(50px, 10vw, 76px); font-weight:600; line-height:1.1; overflow-wrap:anywhere}
 .q-kana{font-size:24px; color:var(--ink-2)}
 .q-vn{font-size:clamp(26px, 5vw, 36px); font-weight:800; line-height:1.2; text-wrap:balance}
 .q-ask{color:var(--ink-2); font-size:15px}
@@ -257,8 +285,9 @@ kbd{font:500 11px var(--f-mono); border:1px solid currentColor; border-bottom-wi
 .c-v{font-weight:600}
 .c-ex{display:flex; align-items:center; gap:8px; min-width:0}
 .c-ex .jp{font-size:15px; color:var(--ink-2); overflow-wrap:anywhere}
-.c-ex .ex-kana{font-size:13px}
+.c-ex .ex-kana,.c-ex .ex-vn{font-size:13px}
 .cover-k .ex-kana{display:none}
+.cover-v .ex-vn{display:none}
 .c-ex .tts{width:30px; height:30px}
 .c-ex .tts svg{width:15px; height:15px}
 .cover-m .cov[data-c="m"]:not(.peek),.cover-k .cov[data-c="k"]:not(.peek),.cover-v .cov[data-c="v"]:not(.peek){cursor:pointer}
@@ -315,6 +344,9 @@ footer p{max-width:70ch}
   .vrow{grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-areas:"no no" "m k" "v v" "ex ex"; gap:8px 12px}
   .c-no{grid-area:no} .c-m{grid-area:m} .c-k{grid-area:k} .c-v{grid-area:v} .c-ex{grid-area:ex}
 }
+@media (max-width: 640px){
+  .choices{grid-template-columns:1fr}
+}
 @media (max-width: 600px){
   .opts{grid-template-columns:1fr}
   .fcard{height:380px}
@@ -330,89 +362,103 @@ footer p{max-width:70ch}
 
 <div class="wrap">
   <header class="topbar">
-    <a class="brand" href="#top"><span class="seal jp" aria-hidden="true">動</span><span>Sổ động từ Dekiru</span></a>  </header>
-
-  <section class="hero" id="top">
-    <div class="hero-text">
-      <p class="eyebrow">Dekiru Nihongo Sơ cấp · <span class="jp">できる日本語 初級</span></p>
-      <div class="hero-word" lang="ja">
-        <span class="hero-ruby jp">どうし</span>
-        <span class="hero-kanji jp">動詞</span>
-      </div>
-      <h1>Thuộc lòng <span class="hl">động từ</span> Bài 1–10</h1>
-      <div class="hero-cta">
-        <a class="btn primary" href="#hoc">Bắt đầu học</a>
-        <a class="btn" href="#cac-buoc">Cách học</a>
-      </div>
+    <button class="brand" type="button" data-act="home" aria-label="Về màn hình chọn bộ từ"><span class="seal jp" id="seal" aria-hidden="true">語</span><span class="brand-name">Sổ từ vựng Dekiru</span></button>
+    <div class="seg deck-seg" id="deckSeg" role="group" aria-label="Đổi bộ từ" hidden>
+      <button type="button" data-act="deck" data-deck="verb" aria-pressed="false"><span class="jp">動詞</span>Động từ</button>
+      <button type="button" data-act="deck" data-deck="adj" aria-pressed="false"><span class="jp">形容詞</span>Tính từ</button>
     </div>
-    <aside class="progress-card" aria-labelledby="pcTitle">
-      <div class="pc-head"><h2 id="pcTitle">Tiến độ của bạn</h2><span class="mono" id="pctTxt">0% đã thuộc</span></div>
-      <div class="pc-stats">
-        <div class="stat"><b class="num" id="nKnown">0</b><span><i class="key known"></i>Đã thuộc</span></div>
-        <div class="stat"><b class="num" id="nLearn">0</b><span><i class="key learning"></i>Đang học</span></div>
-        <div class="stat"><b class="num" id="nNew">96</b><span><i class="key new"></i>Chưa học</span></div>
-      </div>
-      <div class="pc-grid" id="grid"></div>
-      <p class="pc-note">Mỗi ô là một từ. Một từ được tính là đã thuộc sau 3 lần nhớ đúng. Bài 1–2 chưa có động từ (học câu danh từ).</p>
-    </aside>
+  </header>
+
+  <section class="chooser" id="chooser" aria-labelledby="chooseTitle">
+    <div class="ch-head">
+      <p class="eyebrow">Dekiru Nihongo Sơ cấp · <span class="jp">できる日本語 初級</span> · Bài 1–10</p>
+      <h1 id="chooseTitle">Hôm nay bạn học gì?</h1>
+    </div>
+    <div class="choices" id="choices"></div>
+    <p class="ch-note">Tiến độ động từ và tính từ được lưu riêng trên trình duyệt của bạn.</p>
   </section>
 
-  <section class="study" id="hoc" aria-label="Khu học">
-    <div class="scope" aria-label="Phạm vi học">
-      <div class="scope-row"><span class="label">Bài</span><div class="chips" id="lessonChips"></div></div>
-      <div class="scope-row">
-        <button class="chip toggle" type="button" id="weakOnly" data-act="weak" aria-pressed="false">Chỉ từ chưa thuộc</button>
-        <span class="scope-count" id="scopeCount"></span>
+  <div id="app" hidden>
+    <section class="hero" id="top">
+      <div class="hero-text">
+        <p class="eyebrow">Dekiru Nihongo Sơ cấp · <span class="jp">できる日本語 初級</span></p>
+        <div class="hero-word" lang="ja">
+          <span class="hero-ruby jp" id="heroRuby"></span>
+          <span class="hero-kanji jp" id="heroKanji"></span>
+        </div>
+        <h1 id="heroTitle"></h1>
+        <div class="hero-cta">
+          <a class="btn primary" href="#hoc">Bắt đầu học</a>
+          <a class="btn" href="#cac-buoc">Cách học</a>
+        </div>
       </div>
-    </div>
+      <aside class="progress-card" aria-labelledby="pcTitle">
+        <div class="pc-head"><h2 id="pcTitle">Tiến độ của bạn</h2><span class="mono" id="pctTxt">0% đã thuộc</span></div>
+        <div class="pc-stats">
+          <div class="stat"><b class="num" id="nKnown">0</b><span><i class="key known"></i>Đã thuộc</span></div>
+          <div class="stat"><b class="num" id="nLearn">0</b><span><i class="key learning"></i>Đang học</span></div>
+          <div class="stat"><b class="num" id="nNew">0</b><span><i class="key new"></i>Chưa học</span></div>
+        </div>
+        <div class="pc-grid" id="grid"></div>
+        <p class="pc-note" id="pcNote"></p>
+      </aside>
+    </section>
 
-    <div class="tabs-wrap">
-      <div class="tabs" role="tablist" aria-label="Cách học">
-        <button class="tab" role="tab" type="button" id="t-card" data-tab="card" aria-controls="p-card"><span class="t-jp">カード</span><span class="t-vn">Thẻ ghi nhớ</span></button>
-        <button class="tab" role="tab" type="button" id="t-quiz" data-tab="quiz" aria-controls="p-quiz"><span class="t-jp">クイズ</span><span class="t-vn">Trắc nghiệm</span></button>
-        <button class="tab" role="tab" type="button" id="t-type" data-tab="type" aria-controls="p-type"><span class="t-jp">タイピング</span><span class="t-vn">Gõ cách đọc</span></button>
-        <button class="tab" role="tab" type="button" id="t-match" data-tab="match" aria-controls="p-match"><span class="t-jp">マッチ</span><span class="t-vn">Ghép cặp</span></button>
-        <button class="tab" role="tab" type="button" id="t-list" data-tab="list" aria-controls="p-list"><span class="t-jp">単語帳</span><span class="t-vn">Sổ từ</span></button>
-        <span class="tab-ind" id="tabInd" aria-hidden="true"></span>
+    <section class="study" id="hoc" aria-label="Khu học">
+      <div class="scope" aria-label="Phạm vi học">
+        <div class="scope-row"><span class="label">Bài</span><div class="chips" id="lessonChips"></div></div>
+        <div class="scope-row">
+          <button class="chip toggle" type="button" id="weakOnly" data-act="weak" aria-pressed="false">Chỉ từ chưa thuộc</button>
+          <span class="scope-count" id="scopeCount"></span>
+        </div>
       </div>
-    </div>
-    <p class="mode-desc" id="modeDesc"></p>
 
-    <div class="stage">
-      <section class="panel" id="p-card" data-mode="card" role="tabpanel" aria-labelledby="t-card" hidden><div class="body"></div></section>
-      <section class="panel" id="p-quiz" data-mode="quiz" role="tabpanel" aria-labelledby="t-quiz" hidden><div class="body"></div></section>
-      <section class="panel" id="p-type" data-mode="type" role="tabpanel" aria-labelledby="t-type" hidden><div class="body"></div></section>
-      <section class="panel" id="p-match" data-mode="match" role="tabpanel" aria-labelledby="t-match" hidden><div class="body"></div></section>
-      <section class="panel" id="p-list" data-mode="list" role="tabpanel" aria-labelledby="t-list" hidden><div class="body"></div></section>
-    </div>
-  </section>
+      <div class="tabs-wrap">
+        <div class="tabs" role="tablist" aria-label="Cách học">
+          <button class="tab" role="tab" type="button" id="t-card" data-tab="card" aria-controls="p-card"><span class="t-jp">カード</span><span class="t-vn">Thẻ ghi nhớ</span></button>
+          <button class="tab" role="tab" type="button" id="t-quiz" data-tab="quiz" aria-controls="p-quiz"><span class="t-jp">クイズ</span><span class="t-vn">Trắc nghiệm</span></button>
+          <button class="tab" role="tab" type="button" id="t-type" data-tab="type" aria-controls="p-type"><span class="t-jp">タイピング</span><span class="t-vn">Gõ cách đọc</span></button>
+          <button class="tab" role="tab" type="button" id="t-match" data-tab="match" aria-controls="p-match"><span class="t-jp">マッチ</span><span class="t-vn">Ghép cặp</span></button>
+          <button class="tab" role="tab" type="button" id="t-list" data-tab="list" aria-controls="p-list"><span class="t-jp">単語帳</span><span class="t-vn">Sổ từ</span></button>
+          <span class="tab-ind" id="tabInd" aria-hidden="true"></span>
+        </div>
+      </div>
+      <p class="mode-desc" id="modeDesc"></p>
 
-  <section class="guide" id="cach-hoc" aria-labelledby="guideTitle">
-    <div class="guide-head">
-      <p class="eyebrow">Phương pháp</p>
-      <h2 id="guideTitle">Cách học để thuộc cả 96 từ</h2>
-      <p class="lead">Kết hợp hai nguyên tắc: tự nhớ ra đáp án trước khi xem (nhớ chủ động), và từ nào chưa nhớ thì gặp lại sớm hơn (lặp lại ngắt quãng). Mỗi ngày 20–30 phút là đủ.</p>
-    </div>
-    <ol class="steps" id="cac-buoc">
+      <div class="stage">
+        <section class="panel" id="p-card" data-mode="card" role="tabpanel" aria-labelledby="t-card" hidden><div class="body"></div></section>
+        <section class="panel" id="p-quiz" data-mode="quiz" role="tabpanel" aria-labelledby="t-quiz" hidden><div class="body"></div></section>
+        <section class="panel" id="p-type" data-mode="type" role="tabpanel" aria-labelledby="t-type" hidden><div class="body"></div></section>
+        <section class="panel" id="p-match" data-mode="match" role="tabpanel" aria-labelledby="t-match" hidden><div class="body"></div></section>
+        <section class="panel" id="p-list" data-mode="list" role="tabpanel" aria-labelledby="t-list" hidden><div class="body"></div></section>
+      </div>
+    </section>
+
+    <section class="guide" id="cach-hoc" aria-labelledby="guideTitle">
+      <div class="guide-head">
+        <p class="eyebrow">Phương pháp</p>
+        <h2 id="guideTitle"></h2>
+        <p class="lead">Kết hợp hai nguyên tắc: tự nhớ ra đáp án trước khi xem (nhớ chủ động), và từ nào chưa nhớ thì gặp lại sớm hơn (lặp lại ngắt quãng). Mỗi ngày 20–30 phút là đủ.</p>
+      </div>
+      <ol class="steps" id="cac-buoc">
         <li><h3>Nghe và đọc to</h3><p>Mở <a href="#hoc" data-act="goto" data-tab="list">Sổ từ</a>, lọc theo bài đang học. Bấm loa để nghe, rồi đọc to cả câu ví dụ.</p></li>
         <li><h3>Lật thẻ ghi nhớ</h3><p>Nhìn mặt trước, tự nói ra nghĩa rồi mới lật. Thẻ “Chưa nhớ” quay lại sau 4 thẻ, nên đừng ngại bấm.</p></li>
         <li><h3>Trắc nghiệm hai chiều</h3><p>Nhật → Việt để nhận mặt chữ, Việt → Nhật để nhớ ngược, Nghe → Việt để luyện tai. Từ hay sai được hỏi trước.</p></li>
-        <li><h3>Gõ lại thể ます</h3><p>Chỉ nhìn nghĩa tiếng Việt và gõ cách đọc. Gõ đúng mà không cần gợi ý nghĩa là bạn nhớ thật.</p></li>
+        <li><h3 id="s4t"></h3><p id="s4p"></p></li>
         <li><h3>Che cột, tự kiểm tra</h3><p>Trong Sổ từ, che cột Nghĩa hoặc Cách đọc, đọc từng dòng rồi bấm vào ô để kiểm tra.</p></li>
-    </ol>
-    <div class="pairs-head">
-      <h3>Học theo cặp</h3>
-      <p>Nhiều động từ trong 10 bài đi thành cặp đối nghĩa hoặc cùng gốc. Nhớ một từ sẽ kéo theo từ còn lại.</p>
-    </div>
-    <div class="pairs" id="pairs"></div>
-  </section>
+      </ol>
+      <div class="pairs-head">
+        <h3>Học theo cặp</h3>
+        <p id="pairsIntro"></p>
+      </div>
+      <div class="pairs" id="pairs"></div>
+    </section>
 
-  <footer>
-    <p>Dữ liệu từ file <span class="mono">Dekiru_Nihongo_Dong_Tu_Bai_1_10.xlsx</span>: 96 lượt từ, 89 động từ phân biệt. Tiến độ lưu trong trình duyệt của từng người học.</p>
-    <div class="reset" id="resetBox">
-      <button class="btn ghost small" type="button" data-act="reset">Xoá tiến độ</button>
-    </div>
-  </footer>
+    <footer>
+      <p id="source"></p>
+      <div class="reset" id="resetBox"></div>
+    </footer>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
@@ -426,22 +472,15 @@ gsap.registerPlugin(Flip, Draggable, SplitText, ScrollToPlugin);
 gsap.defaults({ ease: "power3.out", duration: 0.5 });
 
 /* ---------- data ---------- */
-// n: STT, b: bài, m: thể ます, k: kana, r: romaji, d: thể từ điển, g: nhóm, v: nghĩa, ex: ví dụ
-const WORDS = [{"n":1,"b":3,"m":"行きます","k":"いきます","r":"ikimasu","d":"行く","g":1,"v":"Đi","ex":"夏休み、北海道へ行きます。"},{"n":2,"b":3,"m":"帰ります","k":"かえります","r":"kaerimasu","d":"帰る","g":1,"v":"Về, trở về","ex":"うちへ帰ります。"},{"n":3,"b":3,"m":"飲みます","k":"のみます","r":"nomimasu","d":"飲む","g":1,"v":"Uống","ex":"ジュースを飲みます。"},{"n":4,"b":3,"m":"買います","k":"かいます","r":"kaimasu","d":"買う","g":1,"v":"Mua","ex":"パンを買います。"},{"n":5,"b":3,"m":"聞きます","k":"ききます","r":"kikimasu","d":"聞く","g":1,"v":"Nghe","ex":"CDを聞きます。"},{"n":6,"b":3,"m":"働きます","k":"はたらきます","r":"hatarakimasu","d":"働く","g":1,"v":"Làm việc, lao động","ex":"会社で働きます。"},{"n":7,"b":3,"m":"読みます","k":"よみます","r":"yomimasu","d":"読む","g":1,"v":"Đọc","ex":"本を読みます。"},{"n":8,"b":3,"m":"食べます","k":"たべます","r":"tabemasu","d":"食べる","g":2,"v":"Ăn","ex":"ご飯を食べます。"},{"n":9,"b":3,"m":"見ます","k":"みます","r":"mimasu","d":"見る","g":2,"v":"Xem, nhìn","ex":"テレビを見ます。"},{"n":10,"b":3,"m":"寝ます","k":"ねます","r":"nemasu","d":"寝る","g":2,"v":"Ngủ","ex":"11時に寝ます。"},{"n":11,"b":3,"m":"します","k":"します","r":"shimasu","d":"する","g":3,"v":"Làm, chơi","ex":"スキーをします。/ サッカーをします。"},{"n":12,"b":3,"m":"勉強します","k":"べんきょうします","r":"benkyoushimasu","d":"勉強する","g":3,"v":"Học, học bài","ex":"日本語を勉強します。"},{"n":13,"b":3,"m":"来ます","k":"きます","r":"kimasu","d":"来る","g":3,"v":"Tới, đến","ex":"日本へ来ます。"},{"n":14,"b":4,"m":"あります","k":"あります","r":"arimasu","d":"ある","g":1,"v":"Có (đồ vật, sự vật)","ex":"箱根に温泉があります。"},{"n":15,"b":5,"m":"会います","k":"あいます","r":"aimasu","d":"会う","g":1,"v":"Gặp gỡ","ex":"友達に会います。"},{"n":16,"b":5,"m":"作ります","k":"つくります","r":"tsukurimasu","d":"作る","g":1,"v":"Làm, chế tạo","ex":"料理を作ります。"},{"n":17,"b":5,"m":"登ります","k":"のぼります","r":"noborimasu","d":"登る","g":1,"v":"Leo, trèo","ex":"山に登ります。"},{"n":18,"b":5,"m":"入ります","k":"はいります","r":"hairimasu","d":"入る","g":1,"v":"Vào, bước vào","ex":"温泉に入ります。"},{"n":19,"b":5,"m":"撮ります","k":"とります","r":"torimasu","d":"撮る","g":1,"v":"Chụp (ảnh)","ex":"写真を撮ります。"},{"n":20,"b":5,"m":"借ります","k":"かります","r":"karimasu","d":"借りる","g":2,"v":"Vay, mượn","ex":"本を借ります。"},{"n":21,"b":5,"m":"買い物します","k":"かいものします","r":"kaimonoshimasu","d":"買い物する","g":3,"v":"Mua sắm","ex":"デパートで買い物します。"},{"n":22,"b":5,"m":"食事します","k":"しょくじします","r":"shokujishimasu","d":"食事する","g":3,"v":"Dùng bữa, ăn uống","ex":"レストランで食事します。"},{"n":23,"b":5,"m":"洗濯します","k":"せんたくします","r":"sentakushimasu","d":"洗濯する","g":3,"v":"Giặt giũ","ex":"服を洗濯します。"},{"n":24,"b":5,"m":"掃除します","k":"そうじします","r":"soujishimasu","d":"掃除する","g":3,"v":"Dọn dẹp, hút bụi","ex":"部屋を掃除します。"},{"n":25,"b":6,"m":"あります","k":"あります","r":"arimasu","d":"ある","g":1,"v":"Có (sự kiện, việc bận, vé)","ex":"用事があります。/ チケットがあります。"},{"n":26,"b":6,"m":"遊びます","k":"あそびます","r":"asobimasu","d":"遊ぶ","g":1,"v":"Chơi","ex":"友達とうちで遊びます。"},{"n":27,"b":6,"m":"行きます","k":"いきます","r":"ikimasu","d":"行く","g":1,"v":"Đi (karaoke, lái xe...)","ex":"カラオケに行きます。/ ドライブに行きます。"},{"n":28,"b":7,"m":"迎えに行きます","k":"むかえにいきます","r":"mukaeniikimasu","d":"迎えに行く","g":1,"v":"Đi đón","ex":"駅へ迎えに行きます。"},{"n":29,"b":7,"m":"洗います","k":"あらいます","r":"araimasu","d":"洗う","g":1,"v":"Rửa, giặt","ex":"お皿を洗います。"},{"n":30,"b":7,"m":"置きます","k":"おきます","r":"okimasu","d":"置く","g":1,"v":"Đặt, để","ex":"荷物を置きます。"},{"n":31,"b":7,"m":"書きます","k":"かきます","r":"kakimasu","d":"書く","g":1,"v":"Viết","ex":"手紙を書きます。"},{"n":32,"b":7,"m":"貸します","k":"かします","r":"kashimasu","d":"貸す","g":1,"v":"Cho mượn","ex":"本を貸します。"},{"n":33,"b":7,"m":"聞きます","k":"ききます","r":"kikimasu","d":"聞く","g":1,"v":"Hỏi, nghe","ex":"パクさんに電話番号を聞きます。"},{"n":34,"b":7,"m":"切ります","k":"きります","r":"kirimasu","d":"切る","g":1,"v":"Cắt, gọt","ex":"パンを切ります。"},{"n":35,"b":7,"m":"使います","k":"つかいます","r":"tsukaimasu","d":"使う","g":1,"v":"Dùng, sử dụng","ex":"パソコンを使います。"},{"n":36,"b":7,"m":"手伝います","k":"てつだいます","r":"tetsudaimasu","d":"手伝う","g":1,"v":"Giúp đỡ","ex":"仕事を手伝います。"},{"n":37,"b":7,"m":"取ります","k":"とります","r":"torimasu","d":"取る","g":1,"v":"Cầm, lấy","ex":"塩を取ります。"},{"n":38,"b":7,"m":"持って行きます","k":"もっていきます","r":"motteikimasu","d":"持って行く","g":1,"v":"Mang đi","ex":"お弁当を持って行きます。"},{"n":39,"b":7,"m":"わかります","k":"わかります","r":"wakarimasu","d":"わかる","g":1,"v":"Hiểu, biết","ex":"道がわかります。"},{"n":40,"b":7,"m":"出します","k":"だします","r":"dashimasu","d":"出す","g":1,"v":"Lấy ra, nộp","ex":"冷蔵庫からジュースを出します。"},{"n":41,"b":7,"m":"歌います","k":"うたいます","r":"utaimasu","d":"歌う","g":1,"v":"Hát","ex":"歌を歌います。"},{"n":42,"b":7,"m":"吸います","k":"すいます","r":"suimasu","d":"吸う","g":1,"v":"Hút (thuốc)","ex":"たばこを吸います。"},{"n":43,"b":7,"m":"話します","k":"はなします","r":"hanashimasu","d":"話す","g":1,"v":"Nói chuyện","ex":"友達と話します。"},{"n":44,"b":7,"m":"弾きます","k":"ひきます","r":"hikimasu","d":"弾く","g":1,"v":"Chơi nhạc cụ (dây, phím)","ex":"ギターを弾きます。"},{"n":45,"b":7,"m":"持ちます","k":"もちます","r":"mochimasu","d":"持つ","g":1,"v":"Cầm, mang","ex":"荷物を持ちます。"},{"n":46,"b":7,"m":"います","k":"います","r":"imasu","d":"いる","g":2,"v":"Có mặt ở (người, động vật)","ex":"本屋の中にいます。"},{"n":47,"b":7,"m":"入れます","k":"いれます","r":"iremasu","d":"入れる","g":2,"v":"Cho vào, bỏ vào","ex":"かばんに入れます。"},{"n":48,"b":7,"m":"教えます","k":"おしえます","r":"oshiemasu","d":"教える","g":2,"v":"Dạy, chỉ bảo","ex":"電話番号を教えます。"},{"n":49,"b":7,"m":"開けます","k":"あけます","r":"akemasu","d":"開ける","g":2,"v":"Mở (cửa, hộp...)","ex":"窓を開けます。"},{"n":50,"b":7,"m":"閉めます","k":"しめます","r":"shimemasu","d":"閉める","g":2,"v":"Đóng (cửa, hộp...)","ex":"窓を閉めます。"},{"n":51,"b":7,"m":"かけます","k":"かけます","r":"kakemasu","d":"かける","g":2,"v":"Gọi (điện thoại)","ex":"友達に電話をかけます。"},{"n":52,"b":7,"m":"持って来ます","k":"もってきます","r":"mottekimasu","d":"持って来る","g":3,"v":"Mang đến","ex":"傘を持って来ます。"},{"n":53,"b":8,"m":"住みます","k":"すみます","r":"sumimasu","d":"住む","g":1,"v":"Sống, sinh sống","ex":"ハノイに住んでいます。"},{"n":54,"b":8,"m":"送ります","k":"おくります","r":"okurimasu","d":"送る","g":1,"v":"Gửi, tiễn","ex":"カードを送ります。"},{"n":55,"b":8,"m":"もらいます","k":"もらいます","r":"moraimasu","d":"もらう","g":1,"v":"Nhận","ex":"プレゼントをもらいます。"},{"n":56,"b":8,"m":"います","k":"います","r":"imasu","d":"いる","g":2,"v":"Có (gia đình, con cái, thú nuôi)","ex":"弟がいます。/ 犬がいます。"},{"n":57,"b":8,"m":"あげます","k":"あげます","r":"agemasu","d":"あげる","g":2,"v":"Tặng, biếu (cho ai đó)","ex":"友達にプレゼントをあげます。"},{"n":58,"b":8,"m":"くれます","k":"くれます","r":"kuremasu","d":"くれる","g":2,"v":"Cho, tặng (cho mình/người thân)","ex":"友達がプレゼントをくれます。"},{"n":59,"b":8,"m":"電話します","k":"でんわします","r":"denwashimasu","d":"電話する","g":3,"v":"Gọi điện thoại","ex":"家族に電話します。"},{"n":60,"b":9,"m":"泳ぎます","k":"およぎます","r":"oyogimasu","d":"泳ぐ","g":1,"v":"Bơi","ex":"プールで泳ぎます。"},{"n":61,"b":9,"m":"描きます","k":"かきます","r":"kakimasu","d":"描く","g":1,"v":"Vẽ, tả","ex":"絵を描きます。"},{"n":62,"b":9,"m":"習います","k":"ならいます","r":"naraimasu","d":"習う","g":1,"v":"Học (từ ai đó)","ex":"先生にピアノを習います。"},{"n":63,"b":9,"m":"乗ります","k":"のります","r":"norimasu","d":"乗る","g":1,"v":"Lên xe, đi (tàu, xe)","ex":"電車に乗ります。/ 自転車に乗ります。"},{"n":64,"b":9,"m":"入ります","k":"はいります","r":"hairimasu","d":"入る","g":1,"v":"Gia nhập, tham gia","ex":"ダンスクラブに入ります。"},{"n":65,"b":9,"m":"申し込みます","k":"もうしこみます","r":"moushikomimasu","d":"申し込む","g":1,"v":"Đăng ký, xin","ex":"イベントに申し込みます。"},{"n":66,"b":9,"m":"言います","k":"いいます","r":"iimasu","d":"言う","g":1,"v":"Nói","ex":"日本語で言います。"},{"n":67,"b":9,"m":"払います","k":"はらいます","r":"haraimasu","d":"払う","g":1,"v":"Trả tiền, thanh toán","ex":"お金を払います。"},{"n":68,"b":9,"m":"集めます","k":"あつめます","r":"atsumemasu","d":"集める","g":2,"v":"Thu thập, sưu tầm","ex":"切手を集めます。"},{"n":69,"b":9,"m":"できます","k":"できます","r":"dekimasu","d":"できる","g":2,"v":"Có thể, biết làm","ex":"スキーができます。"},{"n":70,"b":9,"m":"降ります","k":"おります","r":"orimasu","d":"降りる","g":2,"v":"Xuống (tàu, xe)","ex":"電車を降ります。"},{"n":71,"b":9,"m":"見せます","k":"みせます","r":"misemasu","d":"見せる","g":2,"v":"Cho xem, xuất trình","ex":"カードを見せます。"},{"n":72,"b":9,"m":"運転します","k":"うんてんします","r":"untenshimasu","d":"運転する","g":3,"v":"Lái (ô tô)","ex":"車を運転します。"},{"n":73,"b":9,"m":"参加します","k":"さんかします","r":"sankashimasu","d":"参加する","g":3,"v":"Tham gia","ex":"コンテストに参加します。"},{"n":74,"b":9,"m":"予約します","k":"よやくします","r":"yoyakushimasu","d":"予約する","g":3,"v":"Đặt trước","ex":"レストランを予約します。"},{"n":75,"b":10,"m":"探します","k":"さがします","r":"sagashimasu","d":"探す","g":1,"v":"Tìm kiếm, tìm","ex":"かばんを探します。"},{"n":76,"b":10,"m":"飲みます","k":"のみます","r":"nomimasu","d":"飲む","g":1,"v":"Uống (thuốc)","ex":"薬を飲みます。"},{"n":77,"b":10,"m":"曲がります","k":"まがります","r":"magarimasu","d":"曲がる","g":1,"v":"Rẽ, quẹo","ex":"右へ曲がります。"},{"n":78,"b":10,"m":"渡ります","k":"わたります","r":"watarimasu","d":"渡る","g":1,"v":"Băng qua (đường, cầu)","ex":"橋を渡ります。"},{"n":79,"b":10,"m":"押します","k":"おします","r":"oshimasu","d":"押す","g":1,"v":"Ấn, đẩy","ex":"ボタンを押します。"},{"n":80,"b":10,"m":"座ります","k":"すわります","r":"suwarimasu","d":"座る","g":1,"v":"Ngồi","ex":"いすに座ります。"},{"n":81,"b":10,"m":"立ちます","k":"たちます","r":"tachimasu","d":"立つ","g":1,"v":"Đứng","ex":"ここに立ちます。"},{"n":82,"b":10,"m":"入ります","k":"はいります","r":"hairimasu","d":"入る","g":1,"v":"Vào","ex":"教室に入ります。"},{"n":83,"b":10,"m":"持って帰ります","k":"もってかえります","r":"mottekaerimasu","d":"持って帰る","g":1,"v":"Mang về","ex":"パンフレットを持って帰ります。"},{"n":84,"b":10,"m":"歩きます","k":"あるきます","r":"arukimasu","d":"歩く","g":1,"v":"Đi bộ","ex":"道を歩きます。"},{"n":85,"b":10,"m":"飛びます","k":"とびます","r":"tobimasu","d":"飛ぶ","g":1,"v":"Bay","ex":"空を飛びます。"},{"n":86,"b":10,"m":"なります","k":"なります","r":"narimasu","d":"なる","g":1,"v":"Trở nên, trở thành","ex":"医者になります。"},{"n":87,"b":10,"m":"休みます","k":"やすみます","r":"yasumimasu","d":"休む","g":1,"v":"Nghỉ ngơi","ex":"ベンチで休みます。"},{"n":88,"b":10,"m":"やります","k":"やります","r":"yarimasu","d":"やる","g":1,"v":"Cho (động vật ăn)","ex":"えさをやります。"},{"n":89,"b":10,"m":"すきます","k":"すきます","r":"sukimasu","d":"すく","g":1,"v":"Đói (bụng)","ex":"おなかがすきます。"},{"n":90,"b":10,"m":"かわきます","k":"かわきます","r":"kawakimasu","d":"かわく","g":1,"v":"Khát (cổ họng)","ex":"のどがかわきます。"},{"n":91,"b":10,"m":"聞こえます","k":"きこえます","r":"kikoemasu","d":"聞こえる","g":2,"v":"Nghe thấy, nghe được","ex":"音が聞こえます。"},{"n":92,"b":10,"m":"見えます","k":"みえます","r":"miemasu","d":"見える","g":2,"v":"Nhìn thấy, trông thấy","ex":"山が見えます。"},{"n":93,"b":10,"m":"遅れます","k":"おくれます","r":"okuremasu","d":"遅れる","g":2,"v":"Chậm, muộn","ex":"時間に遅れます。"},{"n":94,"b":10,"m":"捨てます","k":"すてます","r":"sutemasu","d":"捨てる","g":2,"v":"Vứt, bỏ","ex":"ごみを捨てます。"},{"n":95,"b":10,"m":"疲れます","k":"つかれます","r":"tsukaremasu","d":"疲れる","g":2,"v":"Mệt mỏi","ex":"足が疲れます。"},{"n":96,"b":10,"m":"集合します","k":"しゅうごうします","r":"shuugoushimasu","d":"集合する","g":3,"v":"Tập hợp, tập trung","ex":"駅に集合します。"}];
-// kana version of each example sentence that contains kanji (katakana words kept as they are)
-const EX_KANA = {"1":"なつやすみ、ほっかいどうへいきます。","2":"うちへかえります。","3":"ジュースをのみます。","4":"パンをかいます。","5":"CDをききます。","6":"かいしゃではたらきます。","7":"ほんをよみます。","8":"ごはんをたべます。","9":"テレビをみます。","10":"11じにねます。","12":"にほんごをべんきょうします。","13":"にほんへきます。","14":"はこねにおんせんがあります。","15":"ともだちにあいます。","16":"りょうりをつくります。","17":"やまにのぼります。","18":"おんせんにはいります。","19":"しゃしんをとります。","20":"ほんをかります。","21":"デパートでかいものします。","22":"レストランでしょくじします。","23":"ふくをせんたくします。","24":"へやをそうじします。","25":"ようじがあります。/ チケットがあります。","26":"ともだちとうちであそびます。","27":"カラオケにいきます。/ ドライブにいきます。","28":"えきへむかえにいきます。","29":"おさらをあらいます。","30":"にもつをおきます。","31":"てがみをかきます。","32":"ほんをかします。","33":"パクさんにでんわばんごうをききます。","34":"パンをきります。","35":"パソコンをつかいます。","36":"しごとをてつだいます。","37":"しおをとります。","38":"おべんとうをもっていきます。","39":"みちがわかります。","40":"れいぞうこからジュースをだします。","41":"うたをうたいます。","42":"たばこをすいます。","43":"ともだちとはなします。","44":"ギターをひきます。","45":"にもつをもちます。","46":"ほんやのなかにいます。","47":"かばんにいれます。","48":"でんわばんごうをおしえます。","49":"まどをあけます。","50":"まどをしめます。","51":"ともだちにでんわをかけます。","52":"かさをもってきます。","53":"ハノイにすんでいます。","54":"カードをおくります。","56":"おとうとがいます。/ いぬがいます。","57":"ともだちにプレゼントをあげます。","58":"ともだちがプレゼントをくれます。","59":"かぞくにでんわします。","60":"プールでおよぎます。","61":"えをかきます。","62":"せんせいにピアノをならいます。","63":"でんしゃにのります。/ じてんしゃにのります。","64":"ダンスクラブにはいります。","65":"イベントにもうしこみます。","66":"にほんごでいいます。","67":"おかねをはらいます。","68":"きってをあつめます。","70":"でんしゃをおります。","71":"カードをみせます。","72":"くるまをうんてんします。","73":"コンテストにさんかします。","74":"レストランをよやくします。","75":"かばんをさがします。","76":"くすりをのみます。","77":"みぎへまがります。","78":"はしをわたります。","79":"ボタンをおします。","80":"いすにすわります。","81":"ここにたちます。","82":"きょうしつにはいります。","83":"パンフレットをもってかえります。","84":"みちをあるきます。","85":"そらをとびます。","86":"いしゃになります。","87":"ベンチでやすみます。","91":"おとがきこえます。","92":"やまがみえます。","93":"じかんにおくれます。","94":"ごみをすてます。","95":"あしがつかれます。","96":"えきにしゅうごうします。"};
-const BYN = {};
-const fold = s => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d");
-WORDS.forEach(w => { BYN[w.n] = w; w.exk = EX_KANA[w.n] || ""; w._s = fold([w.m, w.k, w.r, w.v, w.ex, w.exk, "bai " + w.b].join(" ")); });
-const LESSONS = [...new Set(WORDS.map(w => w.b))].sort((a, b) => a - b);
-const MODE_DESC = {
-  card: "Nhìn mặt trước, tự nhớ đáp án rồi lật thẻ. Vuốt phải hoặc bấm Đã nhớ. Vuốt trái nếu chưa nhớ, thẻ đó sẽ quay lại sau 4 thẻ.",
-  quiz: "10 câu mỗi lượt, 4 đáp án. Từ bạn hay sai được hỏi trước. Phím 1–4 để chọn, Enter để sang câu.",
-  type: "Nhìn nghĩa tiếng Việt, gõ lại thể ます bằng romaji hoặc hiragana. Dùng gợi ý thì câu đó không được cộng điểm nhớ.",
-  match: "Ghép 6 cặp chữ Nhật với nghĩa càng nhanh càng tốt. Chỉ cặp ghép đúng ngay lần đầu mới được cộng điểm nhớ.",
-  list: "Toàn bộ 96 lượt từ theo phạm vi đang chọn. Bật Che một cột để tự kiểm tra, bấm vào ô bị che để xem."
-};
-const PAIRS = [
+// verbs  — n: STT, b: bài, m: thể ます, k: kana, r: romaji, d: thể từ điển, g: nhóm, v: nghĩa, ex: ví dụ
+const VERB_DATA = [{"n":1,"b":3,"m":"行きます","k":"いきます","r":"ikimasu","d":"行く","g":1,"v":"Đi","ex":"夏休み、北海道へ行きます。"},{"n":2,"b":3,"m":"帰ります","k":"かえります","r":"kaerimasu","d":"帰る","g":1,"v":"Về, trở về","ex":"うちへ帰ります。"},{"n":3,"b":3,"m":"飲みます","k":"のみます","r":"nomimasu","d":"飲む","g":1,"v":"Uống","ex":"ジュースを飲みます。"},{"n":4,"b":3,"m":"買います","k":"かいます","r":"kaimasu","d":"買う","g":1,"v":"Mua","ex":"パンを買います。"},{"n":5,"b":3,"m":"聞きます","k":"ききます","r":"kikimasu","d":"聞く","g":1,"v":"Nghe","ex":"CDを聞きます。"},{"n":6,"b":3,"m":"働きます","k":"はたらきます","r":"hatarakimasu","d":"働く","g":1,"v":"Làm việc, lao động","ex":"会社で働きます。"},{"n":7,"b":3,"m":"読みます","k":"よみます","r":"yomimasu","d":"読む","g":1,"v":"Đọc","ex":"本を読みます。"},{"n":8,"b":3,"m":"食べます","k":"たべます","r":"tabemasu","d":"食べる","g":2,"v":"Ăn","ex":"ご飯を食べます。"},{"n":9,"b":3,"m":"見ます","k":"みます","r":"mimasu","d":"見る","g":2,"v":"Xem, nhìn","ex":"テレビを見ます。"},{"n":10,"b":3,"m":"寝ます","k":"ねます","r":"nemasu","d":"寝る","g":2,"v":"Ngủ","ex":"11時に寝ます。"},{"n":11,"b":3,"m":"します","k":"します","r":"shimasu","d":"する","g":3,"v":"Làm, chơi","ex":"スキーをします。/ サッカーをします。"},{"n":12,"b":3,"m":"勉強します","k":"べんきょうします","r":"benkyoushimasu","d":"勉強する","g":3,"v":"Học, học bài","ex":"日本語を勉強します。"},{"n":13,"b":3,"m":"来ます","k":"きます","r":"kimasu","d":"来る","g":3,"v":"Tới, đến","ex":"日本へ来ます。"},{"n":14,"b":4,"m":"あります","k":"あります","r":"arimasu","d":"ある","g":1,"v":"Có (đồ vật, sự vật)","ex":"箱根に温泉があります。"},{"n":15,"b":5,"m":"会います","k":"あいます","r":"aimasu","d":"会う","g":1,"v":"Gặp gỡ","ex":"友達に会います。"},{"n":16,"b":5,"m":"作ります","k":"つくります","r":"tsukurimasu","d":"作る","g":1,"v":"Làm, chế tạo","ex":"料理を作ります。"},{"n":17,"b":5,"m":"登ります","k":"のぼります","r":"noborimasu","d":"登る","g":1,"v":"Leo, trèo","ex":"山に登ります。"},{"n":18,"b":5,"m":"入ります","k":"はいります","r":"hairimasu","d":"入る","g":1,"v":"Vào, bước vào","ex":"温泉に入ります。"},{"n":19,"b":5,"m":"撮ります","k":"とります","r":"torimasu","d":"撮る","g":1,"v":"Chụp (ảnh)","ex":"写真を撮ります。"},{"n":20,"b":5,"m":"借ります","k":"かります","r":"karimasu","d":"借りる","g":2,"v":"Vay, mượn","ex":"本を借ります。"},{"n":21,"b":5,"m":"買い物します","k":"かいものします","r":"kaimonoshimasu","d":"買い物する","g":3,"v":"Mua sắm","ex":"デパートで買い物します。"},{"n":22,"b":5,"m":"食事します","k":"しょくじします","r":"shokujishimasu","d":"食事する","g":3,"v":"Dùng bữa, ăn uống","ex":"レストランで食事します。"},{"n":23,"b":5,"m":"洗濯します","k":"せんたくします","r":"sentakushimasu","d":"洗濯する","g":3,"v":"Giặt giũ","ex":"服を洗濯します。"},{"n":24,"b":5,"m":"掃除します","k":"そうじします","r":"soujishimasu","d":"掃除する","g":3,"v":"Dọn dẹp, hút bụi","ex":"部屋を掃除します。"},{"n":25,"b":6,"m":"あります","k":"あります","r":"arimasu","d":"ある","g":1,"v":"Có (sự kiện, việc bận, vé)","ex":"用事があります。/ チケットがあります。"},{"n":26,"b":6,"m":"遊びます","k":"あそびます","r":"asobimasu","d":"遊ぶ","g":1,"v":"Chơi","ex":"友達とうちで遊びます。"},{"n":27,"b":6,"m":"行きます","k":"いきます","r":"ikimasu","d":"行く","g":1,"v":"Đi (karaoke, lái xe...)","ex":"カラオケに行きます。/ ドライブに行きます。"},{"n":28,"b":7,"m":"迎えに行きます","k":"むかえにいきます","r":"mukaeniikimasu","d":"迎えに行く","g":1,"v":"Đi đón","ex":"駅へ迎えに行きます。"},{"n":29,"b":7,"m":"洗います","k":"あらいます","r":"araimasu","d":"洗う","g":1,"v":"Rửa, giặt","ex":"お皿を洗います。"},{"n":30,"b":7,"m":"置きます","k":"おきます","r":"okimasu","d":"置く","g":1,"v":"Đặt, để","ex":"荷物を置きます。"},{"n":31,"b":7,"m":"書きます","k":"かきます","r":"kakimasu","d":"書く","g":1,"v":"Viết","ex":"手紙を書きます。"},{"n":32,"b":7,"m":"貸します","k":"かします","r":"kashimasu","d":"貸す","g":1,"v":"Cho mượn","ex":"本を貸します。"},{"n":33,"b":7,"m":"聞きます","k":"ききます","r":"kikimasu","d":"聞く","g":1,"v":"Hỏi, nghe","ex":"パクさんに電話番号を聞きます。"},{"n":34,"b":7,"m":"切ります","k":"きります","r":"kirimasu","d":"切る","g":1,"v":"Cắt, gọt","ex":"パンを切ります。"},{"n":35,"b":7,"m":"使います","k":"つかいます","r":"tsukaimasu","d":"使う","g":1,"v":"Dùng, sử dụng","ex":"パソコンを使います。"},{"n":36,"b":7,"m":"手伝います","k":"てつだいます","r":"tetsudaimasu","d":"手伝う","g":1,"v":"Giúp đỡ","ex":"仕事を手伝います。"},{"n":37,"b":7,"m":"取ります","k":"とります","r":"torimasu","d":"取る","g":1,"v":"Cầm, lấy","ex":"塩を取ります。"},{"n":38,"b":7,"m":"持って行きます","k":"もっていきます","r":"motteikimasu","d":"持って行く","g":1,"v":"Mang đi","ex":"お弁当を持って行きます。"},{"n":39,"b":7,"m":"わかります","k":"わかります","r":"wakarimasu","d":"わかる","g":1,"v":"Hiểu, biết","ex":"道がわかります。"},{"n":40,"b":7,"m":"出します","k":"だします","r":"dashimasu","d":"出す","g":1,"v":"Lấy ra, nộp","ex":"冷蔵庫からジュースを出します。"},{"n":41,"b":7,"m":"歌います","k":"うたいます","r":"utaimasu","d":"歌う","g":1,"v":"Hát","ex":"歌を歌います。"},{"n":42,"b":7,"m":"吸います","k":"すいます","r":"suimasu","d":"吸う","g":1,"v":"Hút (thuốc)","ex":"たばこを吸います。"},{"n":43,"b":7,"m":"話します","k":"はなします","r":"hanashimasu","d":"話す","g":1,"v":"Nói chuyện","ex":"友達と話します。"},{"n":44,"b":7,"m":"弾きます","k":"ひきます","r":"hikimasu","d":"弾く","g":1,"v":"Chơi nhạc cụ (dây, phím)","ex":"ギターを弾きます。"},{"n":45,"b":7,"m":"持ちます","k":"もちます","r":"mochimasu","d":"持つ","g":1,"v":"Cầm, mang","ex":"荷物を持ちます。"},{"n":46,"b":7,"m":"います","k":"います","r":"imasu","d":"いる","g":2,"v":"Có mặt ở (người, động vật)","ex":"本屋の中にいます。"},{"n":47,"b":7,"m":"入れます","k":"いれます","r":"iremasu","d":"入れる","g":2,"v":"Cho vào, bỏ vào","ex":"かばんに入れます。"},{"n":48,"b":7,"m":"教えます","k":"おしえます","r":"oshiemasu","d":"教える","g":2,"v":"Dạy, chỉ bảo","ex":"電話番号を教えます。"},{"n":49,"b":7,"m":"開けます","k":"あけます","r":"akemasu","d":"開ける","g":2,"v":"Mở (cửa, hộp...)","ex":"窓を開けます。"},{"n":50,"b":7,"m":"閉めます","k":"しめます","r":"shimemasu","d":"閉める","g":2,"v":"Đóng (cửa, hộp...)","ex":"窓を閉めます。"},{"n":51,"b":7,"m":"かけます","k":"かけます","r":"kakemasu","d":"かける","g":2,"v":"Gọi (điện thoại)","ex":"友達に電話をかけます。"},{"n":52,"b":7,"m":"持って来ます","k":"もってきます","r":"mottekimasu","d":"持って来る","g":3,"v":"Mang đến","ex":"傘を持って来ます。"},{"n":53,"b":8,"m":"住みます","k":"すみます","r":"sumimasu","d":"住む","g":1,"v":"Sống, sinh sống","ex":"ハノイに住んでいます。"},{"n":54,"b":8,"m":"送ります","k":"おくります","r":"okurimasu","d":"送る","g":1,"v":"Gửi, tiễn","ex":"カードを送ります。"},{"n":55,"b":8,"m":"もらいます","k":"もらいます","r":"moraimasu","d":"もらう","g":1,"v":"Nhận","ex":"プレゼントをもらいます。"},{"n":56,"b":8,"m":"います","k":"います","r":"imasu","d":"いる","g":2,"v":"Có (gia đình, con cái, thú nuôi)","ex":"弟がいます。/ 犬がいます。"},{"n":57,"b":8,"m":"あげます","k":"あげます","r":"agemasu","d":"あげる","g":2,"v":"Tặng, biếu (cho ai đó)","ex":"友達にプレゼントをあげます。"},{"n":58,"b":8,"m":"くれます","k":"くれます","r":"kuremasu","d":"くれる","g":2,"v":"Cho, tặng (cho mình/người thân)","ex":"友達がプレゼントをくれます。"},{"n":59,"b":8,"m":"電話します","k":"でんわします","r":"denwashimasu","d":"電話する","g":3,"v":"Gọi điện thoại","ex":"家族に電話します。"},{"n":60,"b":9,"m":"泳ぎます","k":"およぎます","r":"oyogimasu","d":"泳ぐ","g":1,"v":"Bơi","ex":"プールで泳ぎます。"},{"n":61,"b":9,"m":"描きます","k":"かきます","r":"kakimasu","d":"描く","g":1,"v":"Vẽ, tả","ex":"絵を描きます。"},{"n":62,"b":9,"m":"習います","k":"ならいます","r":"naraimasu","d":"習う","g":1,"v":"Học (từ ai đó)","ex":"先生にピアノを習います。"},{"n":63,"b":9,"m":"乗ります","k":"のります","r":"norimasu","d":"乗る","g":1,"v":"Lên xe, đi (tàu, xe)","ex":"電車に乗ります。/ 自転車に乗ります。"},{"n":64,"b":9,"m":"入ります","k":"はいります","r":"hairimasu","d":"入る","g":1,"v":"Gia nhập, tham gia","ex":"ダンスクラブに入ります。"},{"n":65,"b":9,"m":"申し込みます","k":"もうしこみます","r":"moushikomimasu","d":"申し込む","g":1,"v":"Đăng ký, xin","ex":"イベントに申し込みます。"},{"n":66,"b":9,"m":"言います","k":"いいます","r":"iimasu","d":"言う","g":1,"v":"Nói","ex":"日本語で言います。"},{"n":67,"b":9,"m":"払います","k":"はらいます","r":"haraimasu","d":"払う","g":1,"v":"Trả tiền, thanh toán","ex":"お金を払います。"},{"n":68,"b":9,"m":"集めます","k":"あつめます","r":"atsumemasu","d":"集める","g":2,"v":"Thu thập, sưu tầm","ex":"切手を集めます。"},{"n":69,"b":9,"m":"できます","k":"できます","r":"dekimasu","d":"できる","g":2,"v":"Có thể, biết làm","ex":"スキーができます。"},{"n":70,"b":9,"m":"降ります","k":"おります","r":"orimasu","d":"降りる","g":2,"v":"Xuống (tàu, xe)","ex":"電車を降ります。"},{"n":71,"b":9,"m":"見せます","k":"みせます","r":"misemasu","d":"見せる","g":2,"v":"Cho xem, xuất trình","ex":"カードを見せます。"},{"n":72,"b":9,"m":"運転します","k":"うんてんします","r":"untenshimasu","d":"運転する","g":3,"v":"Lái (ô tô)","ex":"車を運転します。"},{"n":73,"b":9,"m":"参加します","k":"さんかします","r":"sankashimasu","d":"参加する","g":3,"v":"Tham gia","ex":"コンテストに参加します。"},{"n":74,"b":9,"m":"予約します","k":"よやくします","r":"yoyakushimasu","d":"予約する","g":3,"v":"Đặt trước","ex":"レストランを予約します。"},{"n":75,"b":10,"m":"探します","k":"さがします","r":"sagashimasu","d":"探す","g":1,"v":"Tìm kiếm, tìm","ex":"かばんを探します。"},{"n":76,"b":10,"m":"飲みます","k":"のみます","r":"nomimasu","d":"飲む","g":1,"v":"Uống (thuốc)","ex":"薬を飲みます。"},{"n":77,"b":10,"m":"曲がります","k":"まがります","r":"magarimasu","d":"曲がる","g":1,"v":"Rẽ, quẹo","ex":"右へ曲がります。"},{"n":78,"b":10,"m":"渡ります","k":"わたります","r":"watarimasu","d":"渡る","g":1,"v":"Băng qua (đường, cầu)","ex":"橋を渡ります。"},{"n":79,"b":10,"m":"押します","k":"おします","r":"oshimasu","d":"押す","g":1,"v":"Ấn, đẩy","ex":"ボタンを押します。"},{"n":80,"b":10,"m":"座ります","k":"すわります","r":"suwarimasu","d":"座る","g":1,"v":"Ngồi","ex":"いすに座ります。"},{"n":81,"b":10,"m":"立ちます","k":"たちます","r":"tachimasu","d":"立つ","g":1,"v":"Đứng","ex":"ここに立ちます。"},{"n":82,"b":10,"m":"入ります","k":"はいります","r":"hairimasu","d":"入る","g":1,"v":"Vào","ex":"教室に入ります。"},{"n":83,"b":10,"m":"持って帰ります","k":"もってかえります","r":"mottekaerimasu","d":"持って帰る","g":1,"v":"Mang về","ex":"パンフレットを持って帰ります。"},{"n":84,"b":10,"m":"歩きます","k":"あるきます","r":"arukimasu","d":"歩く","g":1,"v":"Đi bộ","ex":"道を歩きます。"},{"n":85,"b":10,"m":"飛びます","k":"とびます","r":"tobimasu","d":"飛ぶ","g":1,"v":"Bay","ex":"空を飛びます。"},{"n":86,"b":10,"m":"なります","k":"なります","r":"narimasu","d":"なる","g":1,"v":"Trở nên, trở thành","ex":"医者になります。"},{"n":87,"b":10,"m":"休みます","k":"やすみます","r":"yasumimasu","d":"休む","g":1,"v":"Nghỉ ngơi","ex":"ベンチで休みます。"},{"n":88,"b":10,"m":"やります","k":"やります","r":"yarimasu","d":"やる","g":1,"v":"Cho (động vật ăn)","ex":"えさをやります。"},{"n":89,"b":10,"m":"すきます","k":"すきます","r":"sukimasu","d":"すく","g":1,"v":"Đói (bụng)","ex":"おなかがすきます。"},{"n":90,"b":10,"m":"かわきます","k":"かわきます","r":"kawakimasu","d":"かわく","g":1,"v":"Khát (cổ họng)","ex":"のどがかわきます。"},{"n":91,"b":10,"m":"聞こえます","k":"きこえます","r":"kikoemasu","d":"聞こえる","g":2,"v":"Nghe thấy, nghe được","ex":"音が聞こえます。"},{"n":92,"b":10,"m":"見えます","k":"みえます","r":"miemasu","d":"見える","g":2,"v":"Nhìn thấy, trông thấy","ex":"山が見えます。"},{"n":93,"b":10,"m":"遅れます","k":"おくれます","r":"okuremasu","d":"遅れる","g":2,"v":"Chậm, muộn","ex":"時間に遅れます。"},{"n":94,"b":10,"m":"捨てます","k":"すてます","r":"sutemasu","d":"捨てる","g":2,"v":"Vứt, bỏ","ex":"ごみを捨てます。"},{"n":95,"b":10,"m":"疲れます","k":"つかれます","r":"tsukaremasu","d":"疲れる","g":2,"v":"Mệt mỏi","ex":"足が疲れます。"},{"n":96,"b":10,"m":"集合します","k":"しゅうごうします","r":"shuugoushimasu","d":"集合する","g":3,"v":"Tập hợp, tập trung","ex":"駅に集合します。"}];
+// adjectives — n: STT, b: bài, m: tính từ, k: kana, r: romaji, v: nghĩa, ex: ví dụ, exv: dịch ví dụ
+const ADJ_DATA = [{"n":1,"b":4,"m":"新しい","k":"あたらしい","r":"atarashii","v":"Mới","ex":"新しい本","exv":"Sách mới"},{"n":2,"b":4,"m":"古い","k":"ふるい","r":"furui","v":"Cũ","ex":"古い町","exv":"Phố cổ, phố cũ"},{"n":3,"b":4,"m":"いい","k":"いい","r":"ii","v":"Tốt, đẹp","ex":"天気がいい","exv":"Thời tiết đẹp"},{"n":4,"b":4,"m":"多い","k":"おおい","r":"ooi","v":"Nhiều ~ (người, vật)","ex":"人が多い","exv":"Đông người"},{"n":5,"b":4,"m":"少ない","k":"すくない","r":"sukunai","v":"Ít ~","ex":"雨が少ない","exv":"Ít mưa"},{"n":6,"b":4,"m":"大きい","k":"おおきい","r":"ookii","v":"To, lớn","ex":"大きいビル","exv":"Tòa nhà to"},{"n":7,"b":4,"m":"小さい","k":"ちいさい","r":"chiisai","v":"Nhỏ, bé","ex":"小さい町","exv":"Thị trấn nhỏ"},{"n":8,"b":4,"m":"高い","k":"たかい","r":"takai","v":"Cao (độ cao)","ex":"富士山は高いです","exv":"Núi Phú Sĩ cao"},{"n":9,"b":4,"m":"低い","k":"ひくい","r":"hikui","v":"Thấp","ex":"低い山","exv":"Núi thấp"},{"n":10,"b":4,"m":"きれい(な)","k":"きれい(な)","r":"kirei na","v":"Đẹp, sạch sẽ","ex":"きれいな川","exv":"Dòng sông sạch đẹp"},{"n":11,"b":4,"m":"静か(な)","k":"しずか(な)","r":"shizuka na","v":"Yên tĩnh","ex":"静かなところ","exv":"Nơi yên tĩnh"},{"n":12,"b":4,"m":"にぎやか(な)","k":"にぎやか(な)","r":"nigiyaka na","v":"Náo nhiệt, nhộn nhịp","ex":"にぎやかな町","exv":"Khu phố nhộn nhịp"},{"n":13,"b":4,"m":"有名(な)","k":"ゆうめい(な)","r":"yuumei na","v":"Nổi tiếng","ex":"有名なお寺","exv":"Ngôi chùa nổi tiếng"},{"n":14,"b":4,"m":"暖かい","k":"あたたかい","r":"atatakai","v":"Ấm áp (thời tiết)","ex":"春は暖かいです","exv":"Mùa xuân ấm áp"},{"n":15,"b":4,"m":"涼しい","k":"すずしい","r":"suzushii","v":"Mát mẻ (thời tiết)","ex":"秋は涼しいです","exv":"Mùa thu mát mẻ"},{"n":16,"b":4,"m":"暑い","k":"あつい","r":"atsui","v":"Nóng bức (thời tiết)","ex":"夏は暑いです","exv":"Mùa hè nóng bức"},{"n":17,"b":4,"m":"寒い","k":"さむい","r":"samui","v":"Lạnh, rét (thời tiết)","ex":"冬は寒いです","exv":"Mùa đông lạnh"},{"n":18,"b":4,"m":"温かい","k":"あたたかい","r":"atatakai","v":"Ấm (nhiệt độ món ăn, đồ uống)","ex":"温かいスープ","exv":"Súp nóng ấm"},{"n":19,"b":4,"m":"熱い","k":"あつい","r":"atsui","v":"Nóng (nhiệt độ nước, đồ vật)","ex":"熱いお茶","exv":"Trà nóng"},{"n":20,"b":4,"m":"冷たい","k":"つめたい","r":"tsumetai","v":"Lạnh, mát (cảm giác tiếp xúc)","ex":"冷たい水","exv":"Nước lạnh"},{"n":21,"b":4,"m":"おいしい","k":"おいしい","r":"oishii","v":"Ngon","ex":"おいしい料理","exv":"Món ăn ngon"},{"n":22,"b":4,"m":"甘い","k":"あまい","r":"amai","v":"Ngọt","ex":"甘いケーキ","exv":"Bánh ngọt"},{"n":23,"b":4,"m":"辛い","k":"からい","r":"karai","v":"Cay","ex":"辛いカレー","exv":"Cà ri cay"},{"n":24,"b":4,"m":"苦い","k":"にがい","r":"nigai","v":"Đắng","ex":"苦いコーヒー","exv":"Cà phê đắng"},{"n":25,"b":4,"m":"すっぱい","k":"すっぱい","r":"suppai","v":"Chua","ex":"すっぱいくだもの","exv":"Trái cây chua"},{"n":26,"b":5,"m":"忙しい","k":"いそがしい","r":"isogashii","v":"Bận rộn","ex":"仕事が忙しい","exv":"Công việc bận"},{"n":27,"b":5,"m":"おもしろい","k":"おもしろい","r":"omoshiroi","v":"Thú vị, hay, hấp dẫn","ex":"おもしろい映画","exv":"Bộ phim hay"},{"n":28,"b":5,"m":"気持ちがいい","k":"きもちがいい","r":"kimochi ga ii","v":"Sảng khoái, dễ chịu","ex":"温泉は気持ちがいいです","exv":"Tắm suối nước nóng thật sảng khoái"},{"n":29,"b":5,"m":"高い","k":"たかい","r":"takai","v":"Đắt (giá cả)","ex":"パソコンは高かったです","exv":"Máy tính đắt"},{"n":30,"b":5,"m":"安い","k":"やすい","r":"yasui","v":"Rẻ","ex":"安い服","exv":"Quần áo rẻ"},{"n":31,"b":5,"m":"楽しい","k":"たのしい","r":"tanoshii","v":"Vui vẻ","ex":"楽しいパーティー","exv":"Bữa tiệc vui vẻ"},{"n":32,"b":5,"m":"難しい","k":"むずかしい","r":"muzukashii","v":"Khó","ex":"テストは難しかったです","exv":"Bài kiểm tra khó"},{"n":33,"b":5,"m":"簡単(な)","k":"かんたん(な)","r":"kantan na","v":"Dễ, đơn giản","ex":"簡単な質問","exv":"Câu hỏi dễ"},{"n":34,"b":5,"m":"大変(な)","k":"たいへん(な)","r":"taihen na","v":"Vất vả, cực khổ","ex":"毎日大変です","exv":"Mỗi ngày đều vất vả"},{"n":35,"b":5,"m":"暇(な)","k":"ひま(な)","r":"hima na","v":"Rảnh rỗi","ex":"暇な日","exv":"Ngày rảnh rỗi"},{"n":36,"b":5,"m":"ほしい","k":"ほしい","r":"hoshii","v":"Muốn có","ex":"カメラがほしい","exv":"Muốn có máy ảnh"},{"n":37,"b":5,"m":"好き(な)","k":"すき(な)","r":"suki na","v":"Thích","ex":"アニメが好きです","exv":"Tôi thích hoạt hình"},{"n":38,"b":5,"m":"嫌い(な)","k":"きらい(な)","r":"kirai na","v":"Ghét","ex":"野菜が嫌いです","exv":"Tôi ghét rau"},{"n":39,"b":6,"m":"残念(な)","k":"ざんねん(な)","r":"zannen na","v":"Tiếc nuối","ex":"残念ですね","exv":"Tiếc quá nhỉ"},{"n":40,"b":6,"m":"近い","k":"ちかい","r":"chikai","v":"Gần","ex":"駅から近いです","exv":"Gần ga"},{"n":41,"b":6,"m":"遠い","k":"とおい","r":"tooi","v":"Xa","ex":"学校から遠い","exv":"Xa trường"},{"n":42,"b":6,"m":"早い","k":"はやい","r":"hayai","v":"Sớm, nhanh","ex":"朝早い","exv":"Sáng sớm"},{"n":43,"b":6,"m":"広い","k":"ひろい","r":"hiroi","v":"Rộng","ex":"広い部屋","exv":"Căn phòng rộng"},{"n":44,"b":8,"m":"頭がいい","k":"あたまがいい","r":"atama ga ii","v":"Thông minh, sáng dạ","ex":"頭がいい学生","exv":"Học sinh thông minh"},{"n":45,"b":8,"m":"かっこいい","k":"かっこいい","r":"kakkoii","v":"Bảnh bao, đẹp trai","ex":"かっこいい人","exv":"Người bảnh bao"},{"n":46,"b":8,"m":"かわいい","k":"かわいい","r":"kawaii","v":"Đáng yêu, dễ thương","ex":"かわいい猫","exv":"Con mèo dễ thương"},{"n":47,"b":8,"m":"背が高い","k":"せがたかい","r":"se ga takai","v":"Cao (dáng người)","ex":"兄は背が高いです","exv":"Anh trai cao"},{"n":48,"b":8,"m":"長い","k":"ながい","r":"nagai","v":"Dài","ex":"髪が長いです","exv":"Tóc dài"},{"n":49,"b":8,"m":"短い","k":"みじかい","r":"mijikai","v":"Ngắn","ex":"髪が短いです","exv":"Tóc ngắn"},{"n":50,"b":8,"m":"優しい","k":"やさしい","r":"yasashii","v":"Hiền lành, dịu dàng","ex":"優しい先生","exv":"Thầy cô hiền từ"},{"n":51,"b":8,"m":"黒い","k":"くろい","r":"kuroi","v":"Đen, màu đen","ex":"黒い靴","exv":"Đôi giày màu đen"},{"n":52,"b":8,"m":"白い","k":"しろい","r":"shiroi","v":"Trắng, màu trắng","ex":"白いシャツ","exv":"Áo sơ mi trắng"},{"n":53,"b":8,"m":"茶色い","k":"ちゃいろい","r":"chairoi","v":"Màu nâu","ex":"茶色い犬","exv":"Con chó màu nâu"},{"n":54,"b":8,"m":"元気(な)","k":"げんき(な)","r":"genki na","v":"Khỏe mạnh","ex":"元気な子ども","exv":"Đứa trẻ khỏe mạnh"},{"n":55,"b":8,"m":"親切(な)","k":"しんせつ(な)","r":"shinsetsu na","v":"Tốt bụng, chu đáo","ex":"親切な人","exv":"Người tốt bụng"},{"n":56,"b":8,"m":"まじめ(な)","k":"まじめ(な)","r":"majime na","v":"Chăm chỉ, nghiêm túc","ex":"まじめな学生","exv":"Học sinh chăm chỉ"},{"n":57,"b":8,"m":"上手(な)","k":"じょうず(な)","r":"jouzu na","v":"Giỏi, khéo léo","ex":"料理が上手です","exv":"Nấu ăn giỏi"},{"n":58,"b":8,"m":"下手(な)","k":"へた(な)","r":"heta na","v":"Kém, dở","ex":"歌が下手です","exv":"Hát kém/dở"},{"n":59,"b":9,"m":"すごい","k":"すごい","r":"sugoi","v":"Tuyệt vời, kinh ngạc","ex":"すごいですね","exv":"Tuyệt vời quá nhỉ"},{"n":60,"b":9,"m":"いろいろ(な)","k":"いろいろ(な)","r":"iroiro na","v":"Nhiều, phong phú, đa dạng","ex":"いろいろな趣味","exv":"Nhiều sở thích"},{"n":61,"b":10,"m":"危ない","k":"あぶない","r":"abunai","v":"Nguy hiểm","ex":"危ない場所","exv":"Nơi nguy hiểm"},{"n":62,"b":10,"m":"大切(な)","k":"たいせつ(な)","r":"taisetsu na","v":"Quan trọng, quý giá","ex":"大切な書類","exv":"Tài liệu quan trọng"},{"n":63,"b":10,"m":"迷惑(な)","k":"めいわく(な)","r":"meiwaku na","v":"Phiền phức, làm phiền","ex":"迷惑な人","exv":"Người làm phiền"},{"n":64,"b":10,"m":"痛い","k":"いたい","r":"itai","v":"Đau","ex":"足が痛いです","exv":"Đau chân"},{"n":65,"b":10,"m":"暗い","k":"くらい","r":"kurai","v":"Tối tăm, u ám","ex":"暗い道","exv":"Đường tối"}];
+// kana version of each example that contains kanji (katakana words kept as they are)
+const VERB_EXK = {"1":"なつやすみ、ほっかいどうへいきます。","2":"うちへかえります。","3":"ジュースをのみます。","4":"パンをかいます。","5":"CDをききます。","6":"かいしゃではたらきます。","7":"ほんをよみます。","8":"ごはんをたべます。","9":"テレビをみます。","10":"11じにねます。","12":"にほんごをべんきょうします。","13":"にほんへきます。","14":"はこねにおんせんがあります。","15":"ともだちにあいます。","16":"りょうりをつくります。","17":"やまにのぼります。","18":"おんせんにはいります。","19":"しゃしんをとります。","20":"ほんをかります。","21":"デパートでかいものします。","22":"レストランでしょくじします。","23":"ふくをせんたくします。","24":"へやをそうじします。","25":"ようじがあります。/ チケットがあります。","26":"ともだちとうちであそびます。","27":"カラオケにいきます。/ ドライブにいきます。","28":"えきへむかえにいきます。","29":"おさらをあらいます。","30":"にもつをおきます。","31":"てがみをかきます。","32":"ほんをかします。","33":"パクさんにでんわばんごうをききます。","34":"パンをきります。","35":"パソコンをつかいます。","36":"しごとをてつだいます。","37":"しおをとります。","38":"おべんとうをもっていきます。","39":"みちがわかります。","40":"れいぞうこからジュースをだします。","41":"うたをうたいます。","42":"たばこをすいます。","43":"ともだちとはなします。","44":"ギターをひきます。","45":"にもつをもちます。","46":"ほんやのなかにいます。","47":"かばんにいれます。","48":"でんわばんごうをおしえます。","49":"まどをあけます。","50":"まどをしめます。","51":"ともだちにでんわをかけます。","52":"かさをもってきます。","53":"ハノイにすんでいます。","54":"カードをおくります。","56":"おとうとがいます。/ いぬがいます。","57":"ともだちにプレゼントをあげます。","58":"ともだちがプレゼントをくれます。","59":"かぞくにでんわします。","60":"プールでおよぎます。","61":"えをかきます。","62":"せんせいにピアノをならいます。","63":"でんしゃにのります。/ じてんしゃにのります。","64":"ダンスクラブにはいります。","65":"イベントにもうしこみます。","66":"にほんごでいいます。","67":"おかねをはらいます。","68":"きってをあつめます。","70":"でんしゃをおります。","71":"カードをみせます。","72":"くるまをうんてんします。","73":"コンテストにさんかします。","74":"レストランをよやくします。","75":"かばんをさがします。","76":"くすりをのみます。","77":"みぎへまがります。","78":"はしをわたります。","79":"ボタンをおします。","80":"いすにすわります。","81":"ここにたちます。","82":"きょうしつにはいります。","83":"パンフレットをもってかえります。","84":"みちをあるきます。","85":"そらをとびます。","86":"いしゃになります。","87":"ベンチでやすみます。","91":"おとがきこえます。","92":"やまがみえます。","93":"じかんにおくれます。","94":"ごみをすてます。","95":"あしがつかれます。","96":"えきにしゅうごうします。"};
+const ADJ_EXK = {"1":"あたらしいほん","2":"ふるいまち","3":"てんきがいい","4":"ひとがおおい","5":"あめがすくない","6":"おおきいビル","7":"ちいさいまち","8":"ふじさんはたかいです","9":"ひくいやま","10":"きれいなかわ","11":"しずかなところ","12":"にぎやかなまち","13":"ゆうめいなおてら","14":"はるはあたたかいです","15":"あきはすずしいです","16":"なつはあついです","17":"ふゆはさむいです","18":"あたたかいスープ","19":"あついおちゃ","20":"つめたいみず","21":"おいしいりょうり","22":"あまいケーキ","23":"からいカレー","24":"にがいコーヒー","26":"しごとがいそがしい","27":"おもしろいえいが","28":"おんせんはきもちがいいです","29":"パソコンはたかかったです","30":"やすいふく","31":"たのしいパーティー","32":"テストはむずかしかったです","33":"かんたんなしつもん","34":"まいにちたいへんです","35":"ひまなひ","37":"アニメがすきです","38":"やさいがきらいです","39":"ざんねんですね","40":"えきからちかいです","41":"がっこうからとおい","42":"あさはやい","43":"ひろいへや","44":"あたまがいいがくせい","45":"かっこいいひと","46":"かわいいねこ","47":"あにはせがたかいです","48":"かみがながいです","49":"かみがみじかいです","50":"やさしいせんせい","51":"くろいくつ","52":"しろいシャツ","53":"ちゃいろいいぬ","54":"げんきなこども","55":"しんせつなひと","56":"まじめながくせい","57":"りょうりがじょうずです","58":"うたがへたです","60":"いろいろなしゅみ","61":"あぶないばしょ","62":"たいせつなしょるい","63":"めいわくなひと","64":"あしがいたいです","65":"くらいみち"};
+// pair items: a ます-form string, or an STT number when the same word appears twice
+const VERB_PAIRS = [
   ["Đối nghĩa", ["開けます", "閉めます"]],
   ["Đối nghĩa", ["貸します", "借ります"]],
   ["Cho và nhận", ["あげます", "くれます", "もらいます"]],
@@ -455,6 +494,70 @@ const PAIRS = [
   ["Cùng đọc là かきます", ["書きます", "描きます"]],
   ["Hướng di chuyển", ["行きます", "来ます", "帰ります"]]
 ];
+const ADJ_PAIRS = [
+  ["Đối nghĩa", [1, 2]],
+  ["Đối nghĩa", [6, 7]],
+  ["Đối nghĩa", [4, 5]],
+  ["Đối nghĩa", [8, 9]],
+  ["Đối nghĩa", [29, 30]],
+  ["Đối nghĩa", [40, 41]],
+  ["Đối nghĩa", [48, 49]],
+  ["Đối nghĩa", [11, 12]],
+  ["Đối nghĩa", [32, 33]],
+  ["Đối nghĩa", [26, 35]],
+  ["Đối nghĩa", [37, 38]],
+  ["Đối nghĩa", [57, 58]],
+  ["Bốn mùa", [14, 16, 15, 17]],
+  ["Cùng đọc là あつい", [16, 19]],
+  ["Cùng đọc là あたたかい", [14, 18]],
+  ["Vị giác", [22, 23, 24, 25]],
+  ["Màu sắc", [51, 52, 53]]
+];
+
+const DECKS = {
+  verb: {
+    id: "verb", key: "dekiru-dongtu-v1", seal: "動", jp: "動詞", ruby: "どうし", name: "Động từ", noun: "động từ", unit: "lượt từ",
+    data: VERB_DATA, exk: VERB_EXK, pairs: VERB_PAIRS, suffix: "ます",
+    sample: ["行きます", "食べます", "見ます", "勉強します"],
+    form: "Thể ます",
+    typeAsk: "Gõ thể ます bằng romaji hoặc hiragana",
+    typePh: "vd: ikimasu hoặc いきます",
+    typeDesc: "Nhìn nghĩa tiếng Việt, gõ lại thể ます bằng romaji hoặc hiragana. Dùng gợi ý thì câu đó không được cộng điểm nhớ.",
+    searchPh: "Tìm: đi, 行, ikimasu, bài 7…",
+    note: "Bài 1–2 chưa có động từ (học câu danh từ).",
+    step4: ["Gõ lại thể ます", "Chỉ nhìn nghĩa tiếng Việt và gõ cách đọc. Gõ đúng mà không cần gợi ý nghĩa là bạn nhớ thật."],
+    pairsIntro: "Nhiều động từ trong 10 bài đi thành cặp đối nghĩa hoặc cùng gốc. Nhớ một từ sẽ kéo theo từ còn lại.",
+    source: '<span class="mono">Dekiru_Nihongo_Dong_Tu_Bai_1_10.xlsx</span>: 96 lượt từ, 89 động từ phân biệt.'
+  },
+  adj: {
+    id: "adj", key: "dekiru-tinhtu-v1", seal: "形", jp: "形容詞", ruby: "けいようし", name: "Tính từ", noun: "tính từ", unit: "mục từ",
+    data: ADJ_DATA, exk: ADJ_EXK, pairs: ADJ_PAIRS, suffix: "",
+    sample: ["新しい", "おいしい", "静か(な)", "好き(な)"],
+    form: "Tính từ",
+    typeAsk: "Gõ cách đọc bằng romaji hoặc hiragana",
+    typePh: "vd: atarashii hoặc あたらしい",
+    typeDesc: "Nhìn nghĩa tiếng Việt, gõ lại cách đọc bằng romaji hoặc hiragana. Tính từ đuôi な gõ có hay không có な đều được.",
+    searchPh: "Tìm: mới, 新, atarashii, bài 8…",
+    note: "Bài 1–3 và bài 7 chưa có tính từ.",
+    step4: ["Gõ lại cách đọc", "Chỉ nhìn nghĩa tiếng Việt và gõ cách đọc của tính từ. Gõ đúng mà không cần gợi ý nghĩa là bạn nhớ thật."],
+    pairsIntro: "Tính từ dễ nhớ nhất khi học theo cặp trái nghĩa và theo chủ đề như thời tiết, vị giác, màu sắc.",
+    source: '<span class="mono">Dekiru_Nihongo_Tinh_Tu_Bai_1_10.xlsx</span>: 65 mục từ, 64 tính từ phân biệt (高い có ở cả bài 4 và bài 5).'
+  }
+};
+
+const fold = s => String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/đ/g, "d");
+Object.values(DECKS).forEach(d => {
+  d.words = d.data; d.byn = {};
+  d.words.forEach(w => {
+    d.byn[w.n] = w;
+    w.exk = d.exk[w.n] || "";
+    w._s = fold([w.m, w.k, w.r, w.v, w.ex, w.exk, w.exv || "", "bai " + w.b].join(" "));
+  });
+  d.lessons = [...new Set(d.words.map(w => w.b))].sort((a, b) => a - b);
+});
+
+// the deck being studied; switched by enterDeck()
+let DECK = null, WORDS = [], BYN = {}, LESSONS = [], S = null;
 
 /* ---------- helpers ---------- */
 const $ = (s, r = document) => r.querySelector(s);
@@ -466,22 +569,30 @@ const dur = d => (RM ? 0 : d);
 let userActed = false;
 let booting = true;
 const ICON_SPK = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M4 9.5v5h3.6L12.5 19V5L7.6 9.5H4z" fill="currentColor"/><path d="M15.5 8.6a4.6 4.6 0 0 1 0 6.8M18.2 6a8.2 8.2 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
-const hasKanji = s => /[\u4e00-\u9faf\u3005]/.test(s);
-const exHTML = w => `<span class="ex-text"><span class="jp" lang="ja">${w.ex}</span>${w.exk ? `<span class="jp ex-kana" lang="ja">${w.exk}</span>` : ""}</span>${ttsBtn(w.exk || w.ex)}`;
+const hasKanji = s => /[一-龯々]/.test(s);
+const plain = s => s.replace(/\(な\)$/, "");   // きれい(な) → きれい
+const sayK = w => plain(w.k);
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const ttsBtn = text => `<button class="tts" type="button" data-say="${esc(text)}" aria-label="Nghe phát âm">${ICON_SPK}</button>`;
+const exHTML = w => `<span class="ex-text"><span class="jp" lang="ja">${w.ex}</span>${w.exk ? `<span class="jp ex-kana" lang="ja">${w.exk}</span>` : ""}${w.exv ? `<span class="ex-vn">${esc(w.exv)}</span>` : ""}</span>${ttsBtn(w.exk || w.ex)}`;
 const segBtn = (act, v, label, cur) => `<button type="button" data-act="${act}" data-v="${v}" aria-pressed="${v === cur}">${label}</button>`;
 const dots = (len, i, res) => `<ol class="dots" aria-hidden="true">${Array.from({ length: len }, (_, k) => `<li class="${k < res.length ? (res[k] ? "ok" : "bad") : k === i ? "cur" : ""}"></li>`).join("")}</ol>`;
 const shake = el => RM ? null : gsap.fromTo(el, { x: 0 }, { keyframes: { x: [0, -9, 8, -6, 4, 0] }, duration: 0.42, ease: "none" });
 const pop = el => RM ? null : gsap.fromTo(el, { scale: 0.95 }, { scale: 1, duration: 0.5, ease: "back.out(3)" });
+// if frames are throttled (background tab, thumbnail), finish an entrance so nothing stays hidden
+const guard = (tl, ms = 2600) => { setTimeout(() => { if (tl.progress() < 1) tl.progress(1); }, ms); return tl; };
 
-/* ---------- storage (per browser) ---------- */
-const KEY = "dekiru-dongtu-v1";
-let S = { p: {}, scope: { ls: LESSONS.slice(), gs: [1, 2, 3], weak: false }, tab: "card", front: "jp", qdir: "jv", kanji: false, best: null };
-try {
-  const raw = localStorage.getItem(KEY);
-  if (raw) { const o = JSON.parse(raw); S = { ...S, ...o, scope: { ...S.scope, ...(o.scope || {}) } }; }
-} catch (e) { /* storage unavailable: start fresh */ }
-function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { /* ignore */ } }
+/* ---------- storage (per browser, one key per deck) ---------- */
+function loadState(d) {
+  let s = { p: {}, scope: { ls: d.lessons.slice(), weak: false }, tab: "card", front: "jp", qdir: "jv", kanji: false, best: null };
+  try {
+    const raw = localStorage.getItem(d.key);
+    if (raw) { const o = JSON.parse(raw); s = { ...s, ...o, scope: { ...s.scope, ...(o.scope || {}) } }; }
+  } catch (e) { /* storage unavailable: start fresh */ }
+  return s;
+}
+function save() { if (!DECK) return; try { localStorage.setItem(DECK.key, JSON.stringify(S)); } catch (e) { /* ignore */ } }
+function knownCount(d) { const s = loadState(d); return d.words.filter(w => s.p[w.n] && s.p[w.n].s && s.p[w.n].lv >= 3).length; }
 
 function status(w) { const p = S.p[w.n]; if (!p || !p.s) return "new"; return p.lv >= 3 ? "known" : "learning"; }
 function grade(w, ok, soft) {
@@ -493,6 +604,15 @@ function grade(w, ok, soft) {
 }
 function pool() { return WORDS.filter(w => S.scope.ls.includes(w.b) && (!S.scope.weak || status(w) !== "known")); }
 function byNeed(list) { return shuffle(list).sort((a, b) => (S.p[a.n] ? S.p[a.n].lv : 0) - (S.p[b.n] ? S.p[b.n].lv : 0)); }
+function modeDesc(id) {
+  return {
+    card: "Nhìn mặt trước, tự nhớ đáp án rồi lật thẻ. Vuốt phải hoặc bấm Đã nhớ. Vuốt trái nếu chưa nhớ, thẻ đó sẽ quay lại sau 4 thẻ.",
+    quiz: "10 câu mỗi lượt, 4 đáp án. Từ bạn hay sai được hỏi trước. Phím 1–4 để chọn, Enter để sang câu.",
+    type: DECK.typeDesc,
+    match: "Ghép 6 cặp chữ Nhật với nghĩa càng nhanh càng tốt. Chỉ cặp ghép đúng ngay lần đầu mới được cộng điểm nhớ.",
+    list: `Toàn bộ ${WORDS.length} từ theo phạm vi đang chọn. Bật Che một cột để tự kiểm tra, bấm vào ô bị che để xem.`
+  }[id];
+}
 
 /* ---------- speech ---------- */
 const TTS = { ok: false, voice: null };
@@ -503,7 +623,7 @@ function initTTS() {
     TTS.voice = vs.find(v => /^ja(-|_|$)/i.test(v.lang)) || null;
     const was = TTS.ok; TTS.ok = !!TTS.voice;
     document.documentElement.classList.toggle("has-tts", TTS.ok);
-    if (TTS.ok && !was && S.tab === "quiz" && Quiz.i === 0 && !Quiz.answered) Quiz.render();
+    if (TTS.ok && !was && S && !$("#app").hidden && S.tab === "quiz" && Quiz.i === 0 && !Quiz.answered) Quiz.render();
   };
   pick();
   if (speechSynthesis.addEventListener) speechSynthesis.addEventListener("voiceschanged", pick);
@@ -521,6 +641,7 @@ function speak(text) {
 /* ---------- progress panel ---------- */
 const cellMap = new Map();
 function buildProgress() {
+  cellMap.clear();
   $("#grid").innerHTML = LESSONS.map(b => `<div class="g-row"><span class="g-lab">Bài ${b}</span><div class="g-cells">${WORDS.filter(w => w.b === b).map(w => `<span class="cell" data-n="${w.n}" title="${esc(w.m + " · " + w.v)}"></span>`).join("")}</div></div>`).join("");
   $$(".cell").forEach(c => cellMap.set(+c.dataset.n, c));
 }
@@ -605,11 +726,11 @@ const Card = {
     this.flipped = false; this.busy = false;
     const jpFront = S.front !== "vn";
     const front = jpFront
-      ? `<span class="tag">Bài ${w.b}</span><div class="jp fc-big" lang="ja">${w.m}</div>${hasKanji(w.m) ? `<div class="jp fc-kana" lang="ja">${w.k}</div>` : ""}${ttsBtn(w.k)}<p class="fc-hint">Nghĩa là gì? Bấm vào thẻ hoặc nhấn Space để lật</p>`
-      : `<span class="tag">Bài ${w.b}</span><div class="fc-vn">${esc(w.v)}</div><p class="fc-hint">Động từ tiếng Nhật là gì? Bấm vào thẻ để lật</p>`;
+      ? `<span class="tag">Bài ${w.b}</span><div class="jp fc-big" lang="ja">${w.m}</div>${hasKanji(w.m) ? `<div class="jp fc-kana" lang="ja">${w.k}</div>` : ""}${ttsBtn(sayK(w))}<p class="fc-hint">Nghĩa là gì? Bấm vào thẻ hoặc nhấn Space để lật</p>`
+      : `<span class="tag">Bài ${w.b}</span><div class="fc-vn">${esc(w.v)}</div><p class="fc-hint">${cap(DECK.noun)} tiếng Nhật là gì? Bấm vào thẻ để lật</p>`;
     const back = `<div class="fc-back-top"><span class="tag">Bài ${w.b}</span></div>
       <div class="jp fc-mid" lang="ja">${w.m}</div>
-      <div class="fc-read"><span class="jp" lang="ja">${w.k}</span><span class="mono">${w.r}</span>${ttsBtn(w.k)}</div>
+      <div class="fc-read"><span class="jp" lang="ja">${w.k}</span><span class="mono">${w.r}</span>${ttsBtn(sayK(w))}</div>
       <div class="fc-mean">${esc(w.v)}</div>
       <div class="fc-ex">${exHTML(w)}</div>`;
     h.innerHTML = `
@@ -696,7 +817,7 @@ const Card = {
 function distractors(w, n, key) {
   const seen = new Set([w[key]]), out = [];
   for (const x of shuffle(WORDS)) {
-    if (x.m === w.m || x.k === w.k || x.d === w.d || seen.has(x[key])) continue;
+    if (x.m === w.m || x.k === w.k || seen.has(x[key])) continue;
     seen.add(x[key]); out.push(x);
     if (out.length === n) break;
   }
@@ -720,16 +841,16 @@ const Quiz = {
     this.answered = false;
     const prompt = d === "jv" ? `<div class="jp q-big" lang="ja">${w.m}</div>${hasKanji(w.m) ? `<div class="jp q-kana" lang="ja">${w.k}</div>` : ""}`
       : d === "vj" ? `<div class="q-vn">${esc(w.v)}</div>`
-      : `<button class="listen" type="button" data-say="${esc(w.k)}">${ICON_SPK}<span>Nghe lại</span></button>`;
+      : `<button class="listen" type="button" data-say="${esc(sayK(w))}">${ICON_SPK}<span>Nghe lại</span></button>`;
     h.innerHTML = `
       <div class="mode-bar">${dots(this.q.length, this.i, this.res)}
         <div class="seg" role="group" aria-label="Kiểu câu hỏi">${segBtn("qdir", "jv", "Nhật → Việt", d)}${segBtn("qdir", "vj", "Việt → Nhật", d)}${TTS.ok ? segBtn("qdir", "au", "Nghe → Việt", d) : ""}</div>
       </div>
-      <div class="q-prompt"><span class="tag">Câu ${this.i + 1} / ${this.q.length}</span>${prompt}<p class="q-ask">${d === "vj" ? "Chọn động từ tiếng Nhật đúng" : "Chọn nghĩa đúng"}</p></div>
+      <div class="q-prompt"><span class="tag">Câu ${this.i + 1} / ${this.q.length}</span>${prompt}<p class="q-ask">${d === "vj" ? `Chọn ${DECK.noun} tiếng Nhật đúng` : "Chọn nghĩa đúng"}</p></div>
       <div class="opts">${this.opts.map((o, k) => `<button class="opt ${d === "vj" ? "opt-jp" : ""}" type="button" data-act="pick" data-k="${k}"><kbd>${k + 1}</kbd>${d === "vj" ? `<span class="ow"><span class="ow-m" lang="ja">${o.m}</span>${hasKanji(o.m) ? `<span class="ow-k" lang="ja">${o.k}</span>` : ""}</span>` : `<span>${esc(o.v)}</span>`}</button>`).join("")}</div>
       <div class="q-foot"><p class="feedback" aria-live="polite"></p><button class="btn primary" type="button" data-act="next" hidden>Câu tiếp <kbd>Enter</kbd></button></div>`;
     if (!RM && !booting) gsap.from($$(".opt", h), { y: 14, autoAlpha: 0, duration: 0.35, stagger: 0.05 });
-    if (d === "au" && userActed) speak(w.k);
+    if (d === "au" && userActed) speak(sayK(w));
   },
   pick(k) {
     if (this.answered || this.i >= this.q.length || !this.opts[k]) return;
@@ -763,11 +884,24 @@ const kata2hira = s => s.replace(/[ァ-ヶ]/g, c => String.fromCharCode(c.charCo
 const normR = s => s.toLowerCase().replace(/[^a-z]/g, "")
   .replace(/shi/g, "si").replace(/chi/g, "ti").replace(/tsu/g, "tu").replace(/fu/g, "hu").replace(/ji/g, "zi")
   .replace(/sh/g, "sy").replace(/ch/g, "ty").replace(/j/g, "zy").replace(/ou/g, "o").replace(/uu/g, "u");
+// accepted spellings of a word; な-adjectives are accepted with or without な
+function answersFor(x) {
+  const k = plain(x.k), m = plain(x.m), na = x.k !== k;
+  const r = x.r.replace(/\s+na$/, "");
+  return {
+    kanji: na ? [m, m + "な"] : [m],
+    kana: na ? [k, k + "な"] : [k],
+    rom: r !== x.r ? [r, x.r] : [r]
+  };
+}
 function isRight(w, raw) {
   const s = raw.trim().replace(/[\s　]+/g, "");
   if (!s) return false;
-  const latin = /[a-z]/i.test(s);
-  return WORDS.filter(x => x.v === w.v).some(x => s === x.m || kata2hira(s) === x.k || (latin && normR(s) === normR(x.r)));
+  const latin = /[a-z]/i.test(s), hira = kata2hira(s);
+  return WORDS.filter(x => x.v === w.v).some(x => {
+    const a = answersFor(x);
+    return a.kanji.includes(s) || a.kana.includes(hira) || (latin && a.rom.some(r => normR(r) === normR(s)));
+  });
 }
 const Type = {
   N: 10, q: [], i: 0, res: [], missed: [], lastMissed: [], hint: 0, shown: false,
@@ -792,11 +926,11 @@ const Type = {
         <span class="tag">Câu ${this.i + 1} / ${this.q.length} · Bài ${w.b}</span>
         <div class="q-vn">${esc(w.v)}</div>
         <div class="jp kanji-hint" lang="ja" ${S.kanji ? "" : "hidden"}>${w.m}</div>
-        <p class="q-ask">Gõ thể ます bằng romaji hoặc hiragana</p>
+        <p class="q-ask">${DECK.typeAsk}</p>
       </div>
       <form class="type-form" id="typeForm" autocomplete="off" novalidate>
         <label class="sr" for="typeIn">Câu trả lời</label>
-        <input id="typeIn" class="type-in" type="text" placeholder="vd: ikimasu hoặc いきます" autocapitalize="off" autocorrect="off" spellcheck="false">
+        <input id="typeIn" class="type-in" type="text" placeholder="${DECK.typePh}" autocapitalize="off" autocorrect="off" spellcheck="false">
         <button class="btn primary" type="submit" id="typeGo">Kiểm tra</button>
       </form>
       <div class="type-tools">
@@ -809,11 +943,15 @@ const Type = {
     if (userActed) $("#typeIn").focus({ preventScroll: true });
   },
   giveHint() {
-    if (this.shown || !this.cur()) return;
-    const stem = this.cur().k.slice(0, -2);
-    this.hint = Math.min(this.hint + 1, Math.max(stem.length - 1, 0) + 1);
-    const n = Math.min(this.hint - 1, Math.max(stem.length - 1, 0));
-    $("#hintLine").textContent = stem.slice(0, n) + "・".repeat(stem.length - n) + "ます";
+    const w = this.cur();
+    if (this.shown || !w) return;
+    // reveal the reading one kana at a time; a verb's ます (and an adjective's (な)) stays visible
+    const full = plain(w.k), suf = DECK.suffix && full.endsWith(DECK.suffix) ? DECK.suffix : "";
+    const stem = full.slice(0, full.length - suf.length), tail = suf + (w.k !== full ? "(な)" : "");
+    const max = Math.max(stem.length - 1, 0);
+    this.hint = Math.min(this.hint + 1, max + 1);
+    const n = Math.min(this.hint - 1, max);
+    $("#hintLine").textContent = stem.slice(0, n) + "・".repeat(stem.length - n) + tail;
     pop($("#hintLine"));
   },
   reveal(ok, prefix) {
@@ -822,7 +960,7 @@ const Type = {
     inp.classList.add(ok ? "ok" : "bad"); inp.readOnly = true;
     if (ok) pop(inp); else shake(inp);
     const li = $$(".dots li", this.host())[this.i]; if (li) li.className = ok && !this.hint ? "ok" : "bad";
-    $("#typeFb").innerHTML = `${prefix} <span class="jp" lang="ja">${w.m}</span>（<span class="jp" lang="ja">${w.k}</span>）<span class="mono">${w.r}</span> ${ttsBtn(w.k)}<br><span class="muted">Nhấn Enter để sang câu tiếp</span>`;
+    $("#typeFb").innerHTML = `${prefix} <span class="jp" lang="ja">${w.m}</span>（<span class="jp" lang="ja">${w.k}</span>）<span class="mono">${w.r}</span> ${ttsBtn(sayK(w))}<br><span class="muted">Nhấn Enter để sang câu tiếp</span>`;
     $("#typeGo").textContent = "Câu tiếp";
     $("#typeGo").focus({ preventScroll: true });
   },
@@ -943,10 +1081,11 @@ const List = {
   host() { return $("#p-list .body"); },
   start() { if (!this.built) this.build(); this.apply(false); },
   restart() { this.apply(true); },
+  reset() { this.built = false; this.covers.clear(); this.host().innerHTML = ""; },
   build() {
     this.host().innerHTML = `
       <div class="list-tools">
-        <div class="search"><label class="sr" for="q">Tìm từ</label><input id="q" type="search" placeholder="Tìm: đi, 行, ikimasu, bài 7…" autocomplete="off"></div>
+        <div class="search"><label class="sr" for="q">Tìm từ</label><input id="q" type="search" placeholder="${DECK.searchPh}" autocomplete="off"></div>
         <div class="covers" role="group" aria-label="Che cột để tự kiểm tra"><span>Che:</span>
           <button class="chip" type="button" data-act="cover" data-c="m" aria-pressed="false">Chữ Hán</button>
           <button class="chip" type="button" data-act="cover" data-c="k" aria-pressed="false">Cách đọc</button>
@@ -954,7 +1093,7 @@ const List = {
         </div>
         <span class="mono" id="listCount"></span>
       </div>
-      <div class="list-head" aria-hidden="true"><span>STT · Bài</span><span>Thể ます</span><span>Cách đọc</span><span>Nghĩa</span><span>Ví dụ</span></div>
+      <div class="list-head" aria-hidden="true"><span>STT · Bài</span><span>${DECK.form}</span><span>Cách đọc</span><span>Nghĩa</span><span>Ví dụ</span></div>
       <ol class="vlist" id="vlist">${WORDS.map(w => `<li class="vrow" data-n="${w.n}">
         <span class="c-no"><i class="dot st-${status(w)}"></i><span class="mono">${w.n}</span><span class="tag">Bài ${w.b}</span></span>
         <span class="c-m cov" data-c="m"><span class="jp" lang="ja">${w.m}</span></span>
@@ -1015,11 +1154,115 @@ function switchTab(id, animate = true) {
     const wrap = $(".tabs-wrap"), tr = target.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
     if (tr.left < wr.left || tr.right > wr.right) wrap.scrollLeft += tr.left - wr.left - 8;
   }
-  $("#modeDesc").textContent = MODE_DESC[id];
+  $("#modeDesc").textContent = modeDesc(id);
   $$(".panel").forEach(p => { p.hidden = p.dataset.mode !== id; });
   stopAll();
   MODES[id].start();
   if (animate && !RM) gsap.fromTo(`#p-${id}`, { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.45, clearProps: "opacity,visibility,transform" });
+}
+
+/* ---------- decks: chooser and per-deck page ---------- */
+let heroSplit = null, chSplit = null, choosing = false;
+function buildPairs() {
+  $("#pairs").innerHTML = DECK.pairs.map(([note, items]) => {
+    const ws = items.map(x => typeof x === "number" ? BYN[x] : WORDS.find(w => w.m === x)).filter(Boolean);
+    return `<div class="pair"><span class="pair-note">${note}</span><div class="pair-words">${ws.map(w => `<span class="pw"><span class="jp" lang="ja">${w.m}</span><small class="jp" lang="ja">${w.k}</small><small>${esc(w.v)}</small></span>`).join('<span class="pair-sep" aria-hidden="true">·</span>')}</div></div>`;
+  }).join("");
+}
+const resetBtn = () => `<button class="btn ghost small" type="button" data-act="reset">Xoá tiến độ ${DECK.noun}</button>`;
+function renderDeckText() {
+  if (heroSplit) { heroSplit.revert(); heroSplit = null; }
+  const d = DECK;
+  $("#heroRuby").textContent = d.ruby;
+  $("#heroKanji").textContent = d.jp;
+  $("#heroTitle").innerHTML = `Thuộc lòng <span class="hl">${d.noun}</span> Bài 1–10`;
+  $("#pcNote").textContent = `Mỗi ô là một từ. Một từ được tính là đã thuộc sau 3 lần nhớ đúng. ${d.note}`;
+  $("#guideTitle").textContent = `Cách học để thuộc cả ${WORDS.length} từ`;
+  $("#s4t").textContent = d.step4[0];
+  $("#s4p").textContent = d.step4[1];
+  $("#pairsIntro").textContent = d.pairsIntro;
+  $("#source").innerHTML = `Dữ liệu từ file ${d.source} Tiến độ lưu trong trình duyệt của từng người học.`;
+  $("#resetBox").innerHTML = resetBtn();
+  $("#seal").textContent = d.seal;
+  $$("#deckSeg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.deck === d.id));
+}
+function deckIntro() {
+  heroSplit = SplitText.create("#heroKanji", { type: "chars", mask: "chars" });
+  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.from(heroSplit.chars, { yPercent: 115, duration: 1, stagger: 0.12, ease: "expo.out" })
+    .from("#heroRuby", { y: 10, autoAlpha: 0, duration: 0.6 }, 0.25)
+    .from([".hero .eyebrow", "#heroTitle", ".hero-cta"], { y: 18, autoAlpha: 0, duration: 0.6, stagger: 0.08 }, 0.15)
+    .fromTo("#heroTitle .hl", { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: 0.55, ease: "power2.inOut" }, 0.75)
+    .from(".progress-card", { y: 24, autoAlpha: 0, duration: 0.6 }, 0.2)
+    .from(".cell", { scale: 0, duration: 0.3, stagger: 0.007, ease: "back.out(2.5)" }, 0.45)
+    .from($$(".pc-stats .num"), { textContent: 0, duration: 0.9, ease: "power2.out", snap: { textContent: 1 } }, 0.5)
+    .from([".scope", ".tabs-wrap", ".mode-desc", ".stage"], { y: 20, autoAlpha: 0, duration: 0.6, stagger: 0.07 }, 0.4);
+  guard(tl);
+}
+function enterDeck(id) {
+  const d = DECKS[id];
+  if (!d) return;
+  stopAll();
+  save();
+  gsap.killTweensOf(window);
+  DECK = d; WORDS = d.words; BYN = d.byn; LESSONS = d.lessons; S = loadState(d);
+  List.reset();
+  renderDeckText();
+  buildProgress(); buildScope(); buildPairs(); refreshProgress(false);
+  $("#chooser").hidden = true; $("#app").hidden = false; $("#deckSeg").hidden = false;
+  window.scrollTo(0, 0);
+  booting = true; switchTab(S.tab, false); booting = false;
+  if (!RM) deckIntro();
+}
+function renderChoices() {
+  if (chSplit) { chSplit.revert(); chSplit = null; }
+  $("#choices").innerHTML = Object.values(DECKS).map(d => {
+    const N = d.words.length, k = knownCount(d), ls = d.lessons;
+    return `<button class="choice ch-${d.id}" type="button" data-act="choose" data-deck="${d.id}">
+      <span class="ch-ruby jp" lang="ja">${d.ruby}</span>
+      <span class="ch-kanji jp" lang="ja">${d.jp}</span>
+      <span class="ch-name">${d.name}</span>
+      <span class="ch-sample jp" lang="ja">${d.sample.join("・")}</span>
+      <span class="ch-meta">${N} ${d.unit} · Bài ${ls[0]}–${ls[ls.length - 1]}</span>
+      <span class="ch-prog"><span class="ch-bar"><i style="transform:scaleX(${(k / N).toFixed(3)})"></i></span><span class="mono">${k} / ${N} đã thuộc</span></span>
+      <span class="ch-go">Học ${d.noun} <span class="ch-arrow" aria-hidden="true">→</span></span>
+    </button>`;
+  }).join("");
+}
+function chooserIntro() {
+  chSplit = SplitText.create(".ch-kanji", { type: "chars", mask: "chars" });
+  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+  tl.from(".ch-head > *", { y: 16, autoAlpha: 0, duration: 0.5, stagger: 0.08 })
+    .from(".choice", { y: 28, autoAlpha: 0, duration: 0.6, stagger: 0.12 }, 0.15)
+    .from(chSplit.chars, { yPercent: 115, duration: 0.9, stagger: 0.07, ease: "expo.out" }, 0.3)
+    .from(".ch-bar i", { scaleX: 0, duration: 0.8, ease: "power2.out" }, 0.6)
+    .from(".ch-note", { autoAlpha: 0, duration: 0.4 }, 0.7);
+  guard(tl);
+}
+function showChooser(animate = true) {
+  stopAll();
+  save();
+  gsap.killTweensOf(window);
+  $("#app").hidden = true; $("#deckSeg").hidden = true; $("#chooser").hidden = false;
+  $("#seal").textContent = "語";
+  gsap.set("#chooser", { clearProps: "opacity,visibility,transform" });
+  renderChoices();
+  choosing = false;
+  window.scrollTo(0, 0);
+  if (animate && !RM) chooserIntro();
+}
+function chooseDeck(btn) {
+  if (choosing) return;
+  choosing = true;
+  const id = btn.dataset.deck;
+  let done = false;
+  const go = () => { if (!done) { done = true; enterDeck(id); } };
+  if (RM) return go();
+  gsap.timeline({ onComplete: go })
+    .to($$(".choice").filter(c => c !== btn), { autoAlpha: 0, y: 16, duration: 0.25, ease: "power2.in" })
+    .to(btn, { scale: 1.03, duration: 0.25, ease: "power2.out" }, 0)
+    .to("#chooser", { autoAlpha: 0, y: -12, duration: 0.25, ease: "power2.in" }, 0.2);
+  setTimeout(go, 900);   // throttled frames: don't strand the user on the chooser
 }
 
 /* ---------- events ---------- */
@@ -1045,6 +1288,9 @@ document.addEventListener("click", e => {
   if (!a) return;
   userActed = true;
   switch (a.dataset.act) {
+    case "choose": chooseDeck(a); break;
+    case "deck": if (!DECK || a.dataset.deck !== DECK.id) enterDeck(a.dataset.deck); break;
+    case "home": showChooser(); break;
     case "flip": Card.flip(); break;
     case "yes": Card.answer(true); break;
     case "no": Card.answer(false); break;
@@ -1072,14 +1318,14 @@ document.addEventListener("click", e => {
     case "weak": S.scope.weak = !S.scope.weak; onScope(); break;
     case "goto": switchTab(a.dataset.tab); break;
     case "reset":
-      $("#resetBox").innerHTML = `<span>Xoá toàn bộ tiến độ trên máy này?</span><button class="btn small" type="button" data-act="reset-yes">Xoá</button><button class="btn ghost small" type="button" data-act="reset-no">Huỷ</button>`;
+      $("#resetBox").innerHTML = `<span>Xoá toàn bộ tiến độ ${DECK.noun} trên máy này?</span><button class="btn small" type="button" data-act="reset-yes">Xoá</button><button class="btn ghost small" type="button" data-act="reset-no">Huỷ</button>`;
       break;
     case "reset-yes":
       S.p = {}; S.best = null; save(); refreshProgress(true); restartMode();
-      $("#resetBox").innerHTML = `<span>Đã xoá tiến độ.</span><button class="btn ghost small" type="button" data-act="reset">Xoá tiến độ</button>`;
+      $("#resetBox").innerHTML = `<span>Đã xoá tiến độ ${DECK.noun}.</span>${resetBtn()}`;
       break;
     case "reset-no":
-      $("#resetBox").innerHTML = `<button class="btn ghost small" type="button" data-act="reset">Xoá tiến độ</button>`;
+      $("#resetBox").innerHTML = resetBtn();
       break;
   }
 });
@@ -1092,6 +1338,7 @@ document.addEventListener("change", e => {
 function stageInView() { const r = $(".stage").getBoundingClientRect(); return r.bottom > 80 && r.top < window.innerHeight - 80; }
 document.addEventListener("keydown", e => {
   if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!S || $("#app").hidden) return;
   const tg = e.target, k = e.key;
   const isTab = tg.closest && tg.closest('[role="tab"]');
   if (isTab && (k === "ArrowRight" || k === "ArrowLeft")) {
@@ -1120,41 +1367,11 @@ document.addEventListener("keydown", e => {
   }
 });
 
-/* ---------- pairs ---------- */
-$("#pairs").innerHTML = PAIRS.map(([note, ms]) => {
-  const ws = ms.map(m => WORDS.find(w => w.m === m)).filter(Boolean);
-  return `<div class="pair"><span class="pair-note">${note}</span><div class="pair-words">${ws.map(w => `<span class="pw"><span class="jp" lang="ja">${w.m}</span><small class="jp" lang="ja">${w.k}</small><small>${esc(w.v)}</small></span>`).join('<span class="pair-sep" aria-hidden="true">·</span>')}</div></div>`;
-}).join("");
-
 /* ---------- boot ---------- */
-initTTS();
-buildProgress();
-buildScope();
-refreshProgress(false);
-switchTab(S.tab, false);
-booting = false;
-
 const mm = gsap.matchMedia();
-mm.add({ motion: "(prefers-reduced-motion: no-preference)", reduce: "(prefers-reduced-motion: reduce)" }, ctx => {
-  RM = ctx.conditions.reduce;
-  if (!ctx.conditions.motion) return;
-  const split = SplitText.create(".hero-kanji", { type: "chars", mask: "chars" });
-  const counters = $$(".pc-stats .num").map(el => ({ el, v: +el.dataset.v || 0 }));
-  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-  tl.from(split.chars, { yPercent: 115, duration: 1, stagger: 0.14, ease: "expo.out" })
-    .from(".hero-ruby", { y: 10, autoAlpha: 0, duration: 0.6 }, 0.25)
-    .from([".hero .eyebrow", ".hero h1", ".hero-cta"], { y: 18, autoAlpha: 0, duration: 0.6, stagger: 0.08 }, 0.15)
-    .fromTo(".hl", { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: 0.55, stagger: 0.2, ease: "power2.inOut" }, 0.75)
-    .from(".progress-card", { y: 24, autoAlpha: 0, duration: 0.6 }, 0.2)
-    .from(".cell", { scale: 0, duration: 0.3, stagger: 0.007, ease: "back.out(2.5)" }, 0.45)
-    .from(counters.map(c => c.el), {
-      textContent: 0, duration: 0.9, ease: "power2.out", snap: { textContent: 1 }
-    }, 0.5)
-    .from([".scope", ".tabs-wrap", ".mode-desc", ".stage"], { y: 20, autoAlpha: 0, duration: 0.6, stagger: 0.07 }, 0.4);
-  // if frames are throttled (background tab, thumbnail), finish the intro so nothing stays hidden
-  const safety = setTimeout(() => { if (tl.progress() < 1) tl.progress(1); }, 2600);
-  return () => { clearTimeout(safety); split.revert(); };
-});
+mm.add("(prefers-reduced-motion: reduce)", () => { RM = true; return () => { RM = false; }; });
+initTTS();
+showChooser(true);
 </script>
 
 </body>
