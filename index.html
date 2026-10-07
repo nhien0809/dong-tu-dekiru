@@ -80,15 +80,9 @@ kbd{font:500 11px var(--f-mono); border:1px solid currentColor; border-bottom-wi
   border:1px solid var(--rule); border-top:5px solid var(--acc); border-radius:22px; box-shadow:var(--shadow); color:var(--ink); font:inherit; cursor:pointer; transition:border-color .2s, box-shadow .2s}
 .choice.ch-adj{--acc:var(--indigo)}
 .choice:hover{border-color:var(--acc); border-top-color:var(--acc); box-shadow:0 1px 0 rgba(26,33,64,.05), 0 22px 40px -24px rgba(26,33,64,.55)}
-.ch-ruby{font-size:15px; letter-spacing:.7em; color:var(--ink-2); padding-left:.2em}
 .ch-kanji{font-size:clamp(60px, 9vw, 100px); font-weight:600; line-height:1.02}
 .ch-name{font-size:24px; font-weight:800; margin-top:6px}
-.ch-sample{font-size:17px; color:var(--ink-2); overflow-wrap:anywhere}
 .ch-meta{font-size:14px; color:var(--ink-2)}
-.ch-prog{display:flex; align-items:center; gap:10px; width:100%; margin-top:8px}
-.ch-bar{flex:1; height:6px; border-radius:6px; background:var(--sheet-2); overflow:hidden}
-.ch-bar i{display:block; height:100%; background:var(--acc); transform-origin:left center}
-.ch-prog .mono{font-size:13px; color:var(--ink-2); white-space:nowrap}
 .ch-go{display:inline-flex; align-items:center; gap:6px; margin-top:10px; font-weight:600; color:var(--acc)}
 .ch-arrow{display:inline-block; transition:transform .2s}
 .choice:hover .ch-arrow{transform:translateX(4px)}
@@ -100,7 +94,6 @@ kbd{font:500 11px var(--f-mono); border:1px solid currentColor; border-bottom-wi
 .eyebrow{font-size:13px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
 .eyebrow .jp{text-transform:none; letter-spacing:.04em; font-weight:600}
 .hero-word{display:grid; justify-items:start; line-height:1}
-.hero-ruby{font-size:17px; letter-spacing:.9em; color:var(--ink-2); padding-left:.35em; margin-bottom:6px}
 .hero-kanji{font-weight:600; font-size:clamp(84px, 15vw, 150px); line-height:.98; letter-spacing:.03em; color:var(--ink)}
 .hero h1{font-size:clamp(28px, 4vw, 42px); font-weight:800; letter-spacing:-.015em; max-width:18ch}
 .hl{background-image:linear-gradient(transparent 56%, var(--mark) 56%, var(--mark) 94%, transparent 94%); background-repeat:no-repeat; background-size:100% 100%; -webkit-box-decoration-break:clone; box-decoration-break:clone; padding-inline:.06em}
@@ -383,7 +376,6 @@ footer p{max-width:70ch}
       <div class="hero-text">
         <p class="eyebrow">Dekiru Nihongo Sơ cấp · <span class="jp">できる日本語 初級</span></p>
         <div class="hero-word" lang="ja">
-          <span class="hero-ruby jp" id="heroRuby"></span>
           <span class="hero-kanji jp" id="heroKanji"></span>
         </div>
         <h1 id="heroTitle"></h1>
@@ -516,9 +508,8 @@ const ADJ_PAIRS = [
 
 const DECKS = {
   verb: {
-    id: "verb", key: "dekiru-dongtu-v1", seal: "動", jp: "動詞", ruby: "どうし", name: "Động từ", noun: "động từ", unit: "lượt từ",
+    id: "verb", key: "dekiru-dongtu-v1", seal: "動", jp: "動詞", name: "Động từ", noun: "động từ", unit: "lượt từ",
     data: VERB_DATA, exk: VERB_EXK, pairs: VERB_PAIRS, suffix: "ます",
-    sample: ["行きます", "食べます", "見ます", "勉強します"],
     form: "Thể ます",
     typeAsk: "Gõ thể ます bằng romaji hoặc hiragana",
     typePh: "vd: ikimasu hoặc いきます",
@@ -530,9 +521,8 @@ const DECKS = {
     source: '<span class="mono">Dekiru_Nihongo_Dong_Tu_Bai_1_10.xlsx</span>: 96 lượt từ, 89 động từ phân biệt.'
   },
   adj: {
-    id: "adj", key: "dekiru-tinhtu-v1", seal: "形", jp: "形容詞", ruby: "けいようし", name: "Tính từ", noun: "tính từ", unit: "mục từ",
+    id: "adj", key: "dekiru-tinhtu-v1", seal: "形", jp: "形容詞", name: "Tính từ", noun: "tính từ", unit: "mục từ",
     data: ADJ_DATA, exk: ADJ_EXK, pairs: ADJ_PAIRS, suffix: "",
-    sample: ["新しい", "おいしい", "静か(な)", "好き(な)"],
     form: "Tính từ",
     typeAsk: "Gõ cách đọc bằng romaji hoặc hiragana",
     typePh: "vd: atarashii hoặc あたらしい",
@@ -592,7 +582,6 @@ function loadState(d) {
   return s;
 }
 function save() { if (!DECK) return; try { localStorage.setItem(DECK.key, JSON.stringify(S)); } catch (e) { /* ignore */ } }
-function knownCount(d) { const s = loadState(d); return d.words.filter(w => s.p[w.n] && s.p[w.n].s && s.p[w.n].lv >= 3).length; }
 
 function status(w) { const p = S.p[w.n]; if (!p || !p.s) return "new"; return p.lv >= 3 ? "known" : "learning"; }
 function grade(w, ok, soft) {
@@ -1173,7 +1162,6 @@ const resetBtn = () => `<button class="btn ghost small" type="button" data-act="
 function renderDeckText() {
   if (heroSplit) { heroSplit.revert(); heroSplit = null; }
   const d = DECK;
-  $("#heroRuby").textContent = d.ruby;
   $("#heroKanji").textContent = d.jp;
   $("#heroTitle").innerHTML = `Thuộc lòng <span class="hl">${d.noun}</span> Bài 1–10`;
   $("#pcNote").textContent = `Mỗi ô là một từ. Một từ được tính là đã thuộc sau 3 lần nhớ đúng. ${d.note}`;
@@ -1190,7 +1178,6 @@ function deckIntro() {
   heroSplit = SplitText.create("#heroKanji", { type: "chars", mask: "chars" });
   const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
   tl.from(heroSplit.chars, { yPercent: 115, duration: 1, stagger: 0.12, ease: "expo.out" })
-    .from("#heroRuby", { y: 10, autoAlpha: 0, duration: 0.6 }, 0.25)
     .from([".hero .eyebrow", "#heroTitle", ".hero-cta"], { y: 18, autoAlpha: 0, duration: 0.6, stagger: 0.08 }, 0.15)
     .fromTo("#heroTitle .hl", { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: 0.55, ease: "power2.inOut" }, 0.75)
     .from(".progress-card", { y: 24, autoAlpha: 0, duration: 0.6 }, 0.2)
@@ -1217,14 +1204,11 @@ function enterDeck(id) {
 function renderChoices() {
   if (chSplit) { chSplit.revert(); chSplit = null; }
   $("#choices").innerHTML = Object.values(DECKS).map(d => {
-    const N = d.words.length, k = knownCount(d), ls = d.lessons;
+    const N = d.words.length, ls = d.lessons;
     return `<button class="choice ch-${d.id}" type="button" data-act="choose" data-deck="${d.id}">
-      <span class="ch-ruby jp" lang="ja">${d.ruby}</span>
       <span class="ch-kanji jp" lang="ja">${d.jp}</span>
       <span class="ch-name">${d.name}</span>
-      <span class="ch-sample jp" lang="ja">${d.sample.join("・")}</span>
       <span class="ch-meta">${N} ${d.unit} · Bài ${ls[0]}–${ls[ls.length - 1]}</span>
-      <span class="ch-prog"><span class="ch-bar"><i style="transform:scaleX(${(k / N).toFixed(3)})"></i></span><span class="mono">${k} / ${N} đã thuộc</span></span>
       <span class="ch-go">Học ${d.noun} <span class="ch-arrow" aria-hidden="true">→</span></span>
     </button>`;
   }).join("");
@@ -1235,7 +1219,6 @@ function chooserIntro() {
   tl.from(".ch-head > *", { y: 16, autoAlpha: 0, duration: 0.5, stagger: 0.08 })
     .from(".choice", { y: 28, autoAlpha: 0, duration: 0.6, stagger: 0.12 }, 0.15)
     .from(chSplit.chars, { yPercent: 115, duration: 0.9, stagger: 0.07, ease: "expo.out" }, 0.3)
-    .from(".ch-bar i", { scaleX: 0, duration: 0.8, ease: "power2.out" }, 0.6)
     .from(".ch-note", { autoAlpha: 0, duration: 0.4 }, 0.7);
   guard(tl);
 }
