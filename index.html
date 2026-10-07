@@ -1126,7 +1126,12 @@ const List = {
 
 /* ---------- tabs ---------- */
 const MODES = { card: Card, quiz: Quiz, type: Type, match: Match, list: List };
-function stopAll() { Card.kill(); Match.stopTimer(); if (TTS.ok) try { speechSynthesis.cancel(); } catch (e) { /* ignore */ } }
+function stopAll() {
+  Card.kill(); Match.stopTimer();
+  // a card flying out or a matched pair leaving must not fire its onComplete into the next round
+  gsap.killTweensOf("#fcard, .tile");
+  if (TTS.ok) try { speechSynthesis.cancel(); } catch (e) { /* ignore */ }
+}
 function restartMode() {
   stopAll();
   if (S.tab === "list") List.restart(); else MODES[S.tab].start();
@@ -1152,6 +1157,10 @@ function switchTab(id, animate = true) {
 
 /* ---------- decks: chooser and per-deck page ---------- */
 let heroSplit = null, chSplit = null, choosing = false;
+let introTL = null, chIntroTL = null, chooseTL = null, chooseSeq = 0;
+// jump an unfinished entrance to its end and drop it, so the next one never starts from a half-hidden state
+const finish = tl => { if (tl) tl.progress(1).kill(); return null; };
+const SHOW = { autoAlpha: 1, y: 0, clearProps: "opacity,visibility,transform" };
 function buildPairs() {
   $("#pairs").innerHTML = DECK.pairs.map(([note, items]) => {
     const ws = items.map(x => typeof x === "number" ? BYN[x] : WORDS.find(w => w.m === x)).filter(Boolean);
@@ -1176,19 +1185,24 @@ function renderDeckText() {
 }
 function deckIntro() {
   heroSplit = SplitText.create("#heroKanji", { type: "chars", mask: "chars" });
-  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-  tl.from(heroSplit.chars, { yPercent: 115, duration: 1, stagger: 0.12, ease: "expo.out" })
-    .from([".hero .eyebrow", "#heroTitle", ".hero-cta"], { y: 18, autoAlpha: 0, duration: 0.6, stagger: 0.08 }, 0.15)
+  // fromTo with an explicit visible end for elements that persist between decks (a from() would
+  // read a half-hidden state as its end value if the user switches decks mid-animation)
+  introTL = gsap.timeline({ defaults: { ease: "power3.out" } })
+    .from(heroSplit.chars, { yPercent: 115, duration: 1, stagger: 0.12, ease: "expo.out" })
+    .fromTo([".hero .eyebrow", "#heroTitle", ".hero-cta"], { y: 18, autoAlpha: 0 }, { ...SHOW, duration: 0.6, stagger: 0.08 }, 0.15)
     .fromTo("#heroTitle .hl", { backgroundSize: "0% 100%" }, { backgroundSize: "100% 100%", duration: 0.55, ease: "power2.inOut" }, 0.75)
-    .from(".progress-card", { y: 24, autoAlpha: 0, duration: 0.6 }, 0.2)
+    .fromTo(".progress-card", { y: 24, autoAlpha: 0 }, { ...SHOW, duration: 0.6 }, 0.2)
     .from(".cell", { scale: 0, duration: 0.3, stagger: 0.007, ease: "back.out(2.5)" }, 0.45)
     .from($$(".pc-stats .num"), { textContent: 0, duration: 0.9, ease: "power2.out", snap: { textContent: 1 } }, 0.5)
-    .from([".scope", ".tabs-wrap", ".mode-desc", ".stage"], { y: 20, autoAlpha: 0, duration: 0.6, stagger: 0.07 }, 0.4);
-  guard(tl);
+    .fromTo([".scope", ".tabs-wrap", ".mode-desc", ".stage"], { y: 20, autoAlpha: 0 }, { ...SHOW, duration: 0.6, stagger: 0.07 }, 0.4);
+  guard(introTL);
 }
 function enterDeck(id) {
   const d = DECKS[id];
   if (!d) return;
+  introTL = finish(introTL); chIntroTL = finish(chIntroTL);
+  if (chooseTL) { chooseTL.kill(); chooseTL = null; }
+  choosing = false;
   stopAll();
   save();
   gsap.killTweensOf(window);
@@ -1215,14 +1229,17 @@ function renderChoices() {
 }
 function chooserIntro() {
   chSplit = SplitText.create(".ch-kanji", { type: "chars", mask: "chars" });
-  const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-  tl.from(".ch-head > *", { y: 16, autoAlpha: 0, duration: 0.5, stagger: 0.08 })
-    .from(".choice", { y: 28, autoAlpha: 0, duration: 0.6, stagger: 0.12 }, 0.15)
+  chIntroTL = gsap.timeline({ defaults: { ease: "power3.out" } })
+    .fromTo(".ch-head > *", { y: 16, autoAlpha: 0 }, { ...SHOW, duration: 0.5, stagger: 0.08 })
+    .fromTo(".choice", { y: 28, autoAlpha: 0 }, { ...SHOW, duration: 0.6, stagger: 0.12 }, 0.15)
     .from(chSplit.chars, { yPercent: 115, duration: 0.9, stagger: 0.07, ease: "expo.out" }, 0.3)
-    .from(".ch-note", { autoAlpha: 0, duration: 0.4 }, 0.7);
-  guard(tl);
+    .fromTo(".ch-note", { autoAlpha: 0 }, { ...SHOW, duration: 0.4 }, 0.7);
+  guard(chIntroTL);
 }
 function showChooser(animate = true) {
+  introTL = finish(introTL); chIntroTL = finish(chIntroTL);
+  if (chooseTL) { chooseTL.kill(); chooseTL = null; }
+  chooseSeq++;   // a pending choice from before must not open a deck now
   stopAll();
   save();
   gsap.killTweensOf(window);
@@ -1237,11 +1254,10 @@ function showChooser(animate = true) {
 function chooseDeck(btn) {
   if (choosing) return;
   choosing = true;
-  const id = btn.dataset.deck;
-  let done = false;
-  const go = () => { if (!done) { done = true; enterDeck(id); } };
+  const id = btn.dataset.deck, seq = ++chooseSeq;
+  const go = () => { if (seq === chooseSeq && choosing) enterDeck(id); };   // enterDeck clears `choosing`, so this runs once
   if (RM) return go();
-  gsap.timeline({ onComplete: go })
+  chooseTL = gsap.timeline({ onComplete: go })
     .to($$(".choice").filter(c => c !== btn), { autoAlpha: 0, y: 16, duration: 0.25, ease: "power2.in" })
     .to(btn, { scale: 1.03, duration: 0.25, ease: "power2.out" }, 0)
     .to("#chooser", { autoAlpha: 0, y: -12, duration: 0.25, ease: "power2.in" }, 0.2);
